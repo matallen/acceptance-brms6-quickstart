@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<name>${groupId}.${artifactId}</name>
+	<parent>
+		<groupId>org.jboss.quickstarts</groupId>
+		<artifactId>brms6</artifactId>
+		<version>6.0.0-SNAPSHOT</version>
+	</parent>
+	<groupId>${project.parent.groupId}.${project.parent.artifactId}</groupId>
+	<artifactId>business-rules</artifactId>
+	<packaging>kjar</packaging>
+
+	<build>
+		<plugins>
+			<!-- maven2+ -->
+			<plugin>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-maven-plugin</artifactId>
+				<version>6.1.0-SNAPSHOT</version>
+				<extensions>true</extensions>
+			</plugin>
+			<!-- maven3 only -->
+			<!--
+			<plugin>
+			  <groupId>org.kie</groupId>
+			  <artifactId>kie-maven-plugin</artifactId>
+			  <version>6.1.0-SNAPSHOT</version>
+			  <extensions>true</extensions>
+			</plugin>
+			-->
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.java.quickcheck</groupId>
+			<artifactId>quickcheck</artifactId>
+			<version>0.6</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- brms dependencies -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>6.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-decisiontables</artifactId>
+			<version>6.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-api</artifactId>
+			<version>6.1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>
