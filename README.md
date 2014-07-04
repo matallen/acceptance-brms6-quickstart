@@ -14,18 +14,22 @@ install the "maven-kie-deployer-plugin" from https://github.com/matallen/maven-k
 
 
 **to build the project**
+
 ```mvn clean install```
 
 **to run acceptance for CI (ie. start containers, deploy apps, run tests and stop containers)**
+
 ```acceptance/mvn clean install -Pbrms,itest -o```
 
 **to develop (ie. start containers, deploy apps and pause so a dev can develop tests against the containers)**
+
 ```acceptance/mvn clean package cargo:run -o```
 
 `head pom.xml` - gives you the two commands to copy/paste quickly
 
 
 **To add more webapps to the acceptance tests**
+
 in the cargo plugin config, add a <deployable> entry for your webapps maven GAV (groupId, artifactId and version) and it will be deployed
 
 
