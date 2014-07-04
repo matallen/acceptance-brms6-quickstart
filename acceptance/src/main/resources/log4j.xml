@@ -16,7 +16,13 @@
 	<logger name="org.apache.http">
 		<level value="OFF" />
 	</logger>
-
+	<logger name="org.apache.catalina">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.kie.integration">
+		<level value="DEBUG" />
+	</logger>
+	
 	<root>
 		<priority value="debug" />
 		<appender-ref ref="console" />

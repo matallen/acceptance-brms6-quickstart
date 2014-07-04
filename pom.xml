@@ -12,11 +12,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<brms.version>6.1.0-SNAPSHOT</brms.version>
 	</properties>
 
 	<modules>
-  <!-- 
-   -->
 		<module>acceptance</module>
 		<module>business-rules</module>
 		<module>rule-domain</module>

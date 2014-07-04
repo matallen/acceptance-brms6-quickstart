@@ -19,7 +19,21 @@
 	<properties>
 		<cucumber.version>1.1.3</cucumber.version>
 	</properties>
-
+	
+	<build>
+		<plugins>
+			<!-- disable test by default, itest will use the failsafe plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.15</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 	<profiles>
 		<profile>
 			<id>brms</id>
@@ -79,7 +93,31 @@
 									<org.kie.demo>false</org.kie.demo>
 									 -->
 								</systemProperties>
+								<!-- these end up in <tomcat_home>/common/lib -->
 								<dependencies>
+									<dependency>
+										<groupId>org.slf4j</groupId>
+										<artifactId>slf4j-api</artifactId>
+									</dependency>
+									<!--
+									<dependency>
+										<groupId>org.slf4j</groupId>
+										<artifactId>slf4j-log4j12</artifactId>
+									</dependency>
+									<dependency>
+										<groupId>log4j</groupId>
+										<artifactId>log4j</artifactId>
+									</dependency>
+									-->
+									<dependency>
+										<groupId>org.kie</groupId>
+										<artifactId>kie-tomcat-integration</artifactId>
+									</dependency>
+									<dependency>
+										<groupId>javax.security.jacc</groupId>
+										<artifactId>javax.security.jacc-api</artifactId>
+									</dependency>
+									
 								</dependencies>
 							</container>
 							<configuration>
@@ -96,7 +134,11 @@
 									</cargo.jvmargs>
 								</properties>
 								<configfiles>
-
+									<configfile>
+										<file>target/classes/server.xml</file>
+										<todir>conf/</todir>
+										<tofile>server.xml</tofile>
+									</configfile>
 								</configfiles>
 								<deployables>
 									<deployable>
@@ -130,14 +172,14 @@
 								<configuration>
 									<debug>true</debug>
 									<serverUri>http://localhost:8080/business-central</serverUri>
-									<username>mat</username>
-									<password>adminmonk3y!</password>
+									<username>admin</username>
+									<password>admin</password>
 									<timeoutInSeconds>60</timeoutInSeconds>
 									<deployables>
 										<deployable>
-											<groupId>dl-customer-order-service</groupId>
-											<artifactId>dl-customer-order-service</artifactId>
-											<version>1.1</version>
+											<groupId>org.jboss.quickstarts.brms6</groupId>
+											<artifactId>business-rules</artifactId>
+											<version>6.0.0-SNAPSHOT</version>
 											<strategy>SINGLETON</strategy> <!-- SINGLETON, PER_REQUEST, PER_PROCESS_INSTANCE -->
 										</deployable>
 									</deployables>
@@ -151,7 +193,17 @@
 	</profiles>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>javax.security.jacc</groupId>
+			<artifactId>javax.security.jacc-api</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-tomcat-integration</artifactId>
+			<version>${brms.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-drools-wb-distribution-wars</artifactId>
