@@ -1,2 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule"/>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+	<!--
+	<kbase name="defaultKieBase" packages="*" default="true">
+		<ksession name="mats.session" type="stateful" default="true"/>
+	</kbase>
+	-->
+	
+	<kbase name="defaultKieBase" packages="schedules.def,schedules.S01">
+		<ksession name="default.ksession" type="stateful"/>
+	</kbase>
+	
+	<kbase name="S01.kbase" packages="schedules.def,schedules.S01">
+		<ksession name="S01.ksession" type="stateful"/>
+	</kbase>
+	<kbase name="S02.kbase" packages="schedules.def,schedules.S02">
+		<ksession name="S02.ksession" type="stateful"/>
+	</kbase>
+	
+    <!-- 
+    <kbase name="defaultKieBase" packages="defaultkiebase" default="true">
+        <ksession name="mats.session" type="stateful"/>
+    </kbase>
+     -->
+</kmodule>
+
+<!-- 
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+	<kbase name="kbase1" packages="*">
+        <ksession name="FireAlarmKBase.session" type="stateful"/>
+    </kbase>
+</kmodule>
+-->

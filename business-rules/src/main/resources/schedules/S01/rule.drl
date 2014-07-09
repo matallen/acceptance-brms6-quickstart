@@ -1,0 +1,6 @@
+package schedules.S01
+
+rule "schedules.S01" when
+then
+	System.out.println("fired! - "+drools.getRule().getName());
+end

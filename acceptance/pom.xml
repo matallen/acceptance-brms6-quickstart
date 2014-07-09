@@ -70,6 +70,7 @@
 						</executions>
 						<configuration>
 							<container>
+								<!-- Tomcat deploy info @ https://github.com/droolsjbpm/kie-wb-distributions/blob/master/kie-wb/kie-wb-distribution-wars/src/main/tomcat7/README.txt -->
 								<!-- tomcat -> http://repo1.maven.org/maven2/org/apache/tomcat/tomcat/7.0.35/tomcat-7.0.35.zip -->
 								<!-- 
 								<containerId>jboss7x</containerId>
@@ -85,13 +86,29 @@
 								<log>target/logs/cargo-plugin.log</log>
 								<timeout>120000</timeout>
 								<systemProperties>
+								<!-- 
+									<org.kie.demo>false</org.kie.demo>
+								 -->
+									<!-- push the temporary CI information into target folder ready to be cleaned up  -->
+									<org.uberfire.nio.git.dir>${project.build.directory}</org.uberfire.nio.git.dir>
+									<!-- local repo for BPMS -->
+									<org.guvnor.m2repo.dir>${project.build.directory}/m2repo</org.guvnor.m2repo.dir>
+									
+									<kie.maven.settings.custom>settings.xml</kie.maven.settings.custom>
+									
 									<!-- 
+									these were added in an attempt to get bpms working on eap-6 - it failed. 
 									<jboss.server.base.dir>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1/standalone</jboss.server.base.dir>
 									<user.dir>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1</user.dir>
 									<logging.configuration>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1/standalone/configuration/logging.properties</logging.configuration>
 									<org.jboss.boot.log.file>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1/standalone/log/boot.log</org.jboss.boot.log.file>
-									<org.kie.demo>false</org.kie.demo>
-									 -->
+									-->
+									
+									<!-- for deployment on Tomcat7 -->
+									<btm.root>${project.build.directory}/cargo/configurations/tomcat7x</btm.root>
+									<bitronix.tm.configuration>${project.build.directory}/cargo/configurations/tomcat7x/conf/btm-config.properties</bitronix.tm.configuration>
+									<jbpm.tsr.jndi.lookup>=java:comp/env/TransactionSynchronizationRegistry</jbpm.tsr.jndi.lookup>
+									<!-- /for deployment on Tomcat7 -->
 								</systemProperties>
 								<!-- these end up in <tomcat_home>/common/lib -->
 								<dependencies>
@@ -109,6 +126,7 @@
 										<artifactId>log4j</artifactId>
 									</dependency>
 									-->
+									<!-- for deployment on Tomcat7 -->
 									<dependency>
 										<groupId>org.kie</groupId>
 										<artifactId>kie-tomcat-integration</artifactId>
@@ -117,7 +135,27 @@
 										<groupId>javax.security.jacc</groupId>
 										<artifactId>javax.security.jacc-api</artifactId>
 									</dependency>
-									
+									<dependency>
+									    <groupId>org.codehaus.btm</groupId>
+									    <artifactId>btm-tomcat55-lifecycle</artifactId>
+									</dependency>
+									<dependency>
+									    <groupId>org.apache.geronimo.specs</groupId>
+									    <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+									</dependency>
+									<dependency>
+									    <groupId>org.codehaus.btm</groupId>
+									    <artifactId>btm</artifactId>
+									</dependency>
+									<dependency>
+									    <groupId>com.h2database</groupId>
+									    <artifactId>h2</artifactId>
+									</dependency>
+									<dependency>
+									    <groupId>javax.transaction</groupId>
+									    <artifactId>jta</artifactId>
+									</dependency>
+									<!-- /for deployment on Tomcat7 -->
 								</dependencies>
 							</container>
 							<configuration>
@@ -135,19 +173,46 @@
 								</properties>
 								<configfiles>
 									<configfile>
-										<file>target/classes/server.xml</file>
+										<file>target/classes/tomcat7x/server.xml</file>
 										<todir>conf/</todir>
 										<tofile>server.xml</tofile>
 									</configfile>
+									<configfile>
+										<file>target/classes/tomcat7x/tomcat-users.xml</file>
+										<todir>conf/</todir>
+										<tofile>tomcat-users.xml</tofile>
+									</configfile>
+									<configfile>
+										<file>target/classes/tomcat7x/context.xml</file>
+										<todir>conf/</todir>
+										<tofile>context.xml</tofile>
+									</configfile>
+									<configfile>
+										<file>target/classes/tomcat7x/btm-config.properties</file>
+										<todir>conf/</todir>
+										<tofile>btm-config.properties</tofile>
+									</configfile>
+									<configfile>
+										<file>target/classes/tomcat7x/resources.properties</file>
+										<todir>conf/</todir>
+										<tofile>resources.properties</tofile>
+									</configfile>
 								</configfiles>
 								<deployables>
+									<!-- 
 									<deployable>
-
 										<groupId>org.kie</groupId>
 										<artifactId>kie-drools-wb-distribution-wars</artifactId>
 										<classifier>tomcat7.0</classifier>
-
-										<!-- <groupId>org.kie</groupId> <artifactId>kie-drools-wb-webapp</artifactId> -->
+										<type>war</type>
+										<properties>
+											<context>business-central</context>
+										</properties>
+									</deployable>
+									 -->
+									<deployable>
+										<groupId>org.drools</groupId>
+										<artifactId>business-central</artifactId>
 										<type>war</type>
 										<properties>
 											<context>business-central</context>
@@ -157,7 +222,6 @@
 							</configuration>
 						</configuration>
 					</plugin>
-
 					<plugin>
 						<groupId>org.jboss.kie.maven</groupId>
 						<artifactId>maven-kie-deployer-plugin</artifactId>
@@ -180,7 +244,7 @@
 											<groupId>org.jboss.quickstarts.brms6</groupId>
 											<artifactId>business-rules</artifactId>
 											<version>6.0.0-SNAPSHOT</version>
-											<strategy>SINGLETON</strategy> <!-- SINGLETON, PER_REQUEST, PER_PROCESS_INSTANCE -->
+											<strategy>PER_PROCESS_INSTANCE</strategy> <!-- SINGLETON, PRE_REQUEST or PER_PROCESS_INSTANCE -->
 										</deployable>
 									</deployables>
 								</configuration>
@@ -194,6 +258,39 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>business-central</artifactId>
+			<version>${brms.version}</version>
+			<type>war</type>
+		</dependency>
+		
+		<!-- required for deploying on Tomcat7 -->
+		<dependency>
+		    <groupId>org.codehaus.btm</groupId>
+		    <artifactId>btm-tomcat55-lifecycle</artifactId>
+		    <version>2.1.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.geronimo.specs</groupId>
+		    <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.codehaus.btm</groupId>
+		    <artifactId>btm</artifactId>
+		    <version>2.1.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.179</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.transaction</groupId>
+		    <artifactId>jta</artifactId>
+		    <version>1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>javax.security.jacc</groupId>
 			<artifactId>javax.security.jacc-api</artifactId>
 			<version>1.5</version>
@@ -203,7 +300,15 @@
 			<artifactId>kie-tomcat-integration</artifactId>
 			<version>${brms.version}</version>
 		</dependency>
+		<!-- /required for deploying on Tomcat7 -->
 		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		
+		<!-- 
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-drools-wb-distribution-wars</artifactId>
@@ -211,6 +316,8 @@
 			<type>war</type>
 			<version>6.1.0.CR1</version>
 		</dependency>
+		 -->
+
 		<!-- 
 		<dependency>
 			<groupId>org.kie</groupId>
@@ -220,7 +327,7 @@
 		</dependency>
 		 -->
 
-		<!-- cucumber -->
+		<!-- cucumber bdd framework -->
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-java</artifactId>

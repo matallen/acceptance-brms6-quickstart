@@ -12,7 +12,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<brms.version>6.1.0-SNAPSHOT</brms.version>
+		<!--brms.version>6.0.2.BRMS</brms.version-->
+		<brms.version>6.0.3-redhat-4</brms.version>
+		<brms-internal.version>6.0.3-redhat-4</brms-internal.version>
 	</properties>
 
 	<modules>
@@ -22,10 +24,16 @@
 	</modules>
 
 	<repositories>
+		<!--
 		<repository>
 			<id>jboss-nexus</id>
 			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
 		</repository>
+		<repository>
+			<id>jboss-techpreview</id>
+			<url>http://maven.repository.redhat.com/techpreview/all</url>
+		</repository>
+		-->
 	</repositories>
 
 	<pluginRepositories>
@@ -34,10 +42,16 @@
 			<name>Plugins Repository</name>
 			<url>http://repo1.maven.org/maven2</url>
 		</pluginRepository>
+		<!--
 		<pluginRepository>
 			<id>jboss-nexus</id>
 			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
 		</pluginRepository>
+		<pluginRepository>
+			<id>jboss-techpreview</id>
+			<url>http://maven.repository.redhat.com/techpreview/all</url>
+		</pluginRepository>
+		-->
 	</pluginRepositories>
 
 	<dependencyManagement>
