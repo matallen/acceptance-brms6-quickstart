@@ -38,6 +38,12 @@
 		<profile>
 			<id>brms</id>
 			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -94,7 +100,7 @@
 									<!-- local repo for BPMS -->
 									<org.guvnor.m2repo.dir>${project.build.directory}/m2repo</org.guvnor.m2repo.dir>
 									
-									<kie.maven.settings.custom>settings.xml</kie.maven.settings.custom>
+									<kie.maven.settings.custom>${project.build.directory}/classes/settings.xml</kie.maven.settings.custom>
 									
 									<!-- 
 									these were added in an attempt to get bpms working on eap-6 - it failed. 
