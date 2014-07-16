@@ -12,6 +12,7 @@ import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.rule.Rule;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.scanner.PomParser;
 
 public class BusinessFunctionTest extends RulesTestBase{
 
@@ -41,12 +42,19 @@ public class BusinessFunctionTest extends RulesTestBase{
 	}
 	
 	
-	
+	@Test
 	public void testIntegration(){
 	  // TODO: set the system variable to force the use of a specific settings.xml to point to the http://localhost:8080/business-central/maven2
+//	  System.setProperty("kie.maven.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/settings.xml");
+	  
+//	  org.kie.scanner.ArtifactResolver x;
+	  
 	  
 	  KieServices kieServices = KieServices.Factory.get();
+	  
 	  ReleaseId releaseId = kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", "6.0.0-SNAPSHOT");
+	  kieServices.getRepository().getKieModule(releaseId);
+	  
 	  KieContainer kContainer = kieServices.newKieContainer(releaseId);
 	  KieScanner kScanner = kieServices.newKieScanner(kContainer);
 	  

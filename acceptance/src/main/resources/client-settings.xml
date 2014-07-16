@@ -2,16 +2,16 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <localRepository>${bpms-local.m2repo}</localRepository>
+  <localRepository>${client-local.m2repo}</localRepository>
   
   <profiles>
     <profile>
       <id>repositories</id>
       <repositories>
         <repository>
-          <id>bpms-remote</id>
-          <name>BPMS Remote</name>
-          <url>${bpms-remote.m2repo}</url>
+          <id>client-remote</id>
+          <name>Client Remote</name>
+          <url>localhost:8080/business-central/maven2/</url>
         </repository>
       </repositories>
     </profile>

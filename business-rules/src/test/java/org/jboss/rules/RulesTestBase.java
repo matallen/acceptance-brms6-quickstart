@@ -18,6 +18,7 @@ import org.kie.api.builder.Message;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.io.ResourceFactory;
 
 public class RulesTestBase {
 	private KieSession session;

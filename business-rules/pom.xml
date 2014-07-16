@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<name>${groupId}.${artifactId}</name>
+	<name>${project.groupId}.${project.artifactId}</name>
 	<parent>
 		<groupId>org.jboss.quickstarts</groupId>
 		<artifactId>brms6</artifactId>
@@ -9,8 +9,47 @@
 	<groupId>org.jboss.quickstarts.brms6</groupId>
 	<artifactId>business-rules</artifactId>
 	<packaging>kjar</packaging>
-
+<!--
+<repositories>
+<repository>
+        <id>busines-central-m2</id>
+        <url>http://localhost:8080/business-central/maven2</url>
+     </repository>
+</repositories>
+-->
+			<!-- <url>file:///home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/bpms-local-m2repo</url> -->
+<!--
+	<repositories>
+		<repository>
+			<id>local</id>
+			<url>http://localhost:8080/business-central/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+-->
+	
+	<!--
+	<distributionManagement>
+		<repository>
+			<id>deployment</id>
+			<name>Internal Releases</name>
+			<url>http://your.server.com:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>deployment</id>
+			<name>Internal Releases</name>
+			<url>http://your.server.com:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+	-->
+	
 	<build>
+	
 		<plugins>
 			<!-- maven2+ -->
 			<!-- <plugin> <groupId>org.drools</groupId> <artifactId>drools-maven-plugin</artifactId> <version>${brms.version}</version> <extensions>true</extensions> </plugin> -->
@@ -18,16 +57,17 @@
 			<plugin>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-maven-plugin</artifactId>
-				<!-- <version>${brms-internal.version}</version> -->
 				<!--
 				<version>6.0.1.Final</version>
-				-->
+				<version>6.2.0-SNAPSHOT</version>
 				<version>${brms.version}</version>
+				-->
+				<version>${kie-maven-plugin.version}</version>
 				<!-- -->
-				<inherited>false</inherited>
 				<extensions>true</extensions>
-				<dependencies>
 					<!-- TODO: use the version from the distro (tmp/jboss-bpms-engine/lib/protobuf-java-2.5.0.jar)-->
+					<!--
+				<dependencies>
 					<dependency>
 						<groupId>com.google.protobuf</groupId>
 						<artifactId>protobuf-java</artifactId>
@@ -114,26 +154,6 @@
 						<artifactId>mvel2</artifactId>
 						<version>${brms.version}</version>
 					</dependency>
-				  <!-- 
-				  <dependencies>
-				  	<dependency>
-				  		<groupId>org.kie</groupId>
-				  		<artifactId>kie-api</artifactId>
-				  		<version>${brms.version}</version>
-				  	</dependency>
-				  	<dependency>
-				  		<groupId>org.drools</groupId>
-				  		<artifactId>drools-compiler</artifactId>
-				  		<version>${brms.version}</version>
-				  	</dependency>
-				  	<dependency>
-					    <groupId>org.apache.maven.shared</groupId>
-					    <artifactId>maven-artifact-resolver</artifactId>
-					    <version>1.0</version>
-					</dependency>
-				  	// find this and add the dependency
-				  	com/thoughtworks/xstream/io/HierarchicalStreamDriver
-				   -->
 					<dependency>
 						<groupId>org.slf4j</groupId>
 						<artifactId>slf4j-api</artifactId>
@@ -145,6 +165,7 @@
 						<version>1.7.2</version>
 					</dependency>
 				</dependencies>
+					-->
 			</plugin>
 		</plugins>
 	</build>
@@ -205,6 +226,14 @@
 			<version>${brms.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-ci</artifactId>
+			<!--
+			<version>6.2.0-SNAPSHOT</version>
+			-->
+			<version>${brms.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>1.4.7</version>
@@ -214,24 +243,32 @@
 		<dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
 			<artifactId>ecj</artifactId>
+			<!-- 
 			<version>${brms.version}</version>
+			 -->
 		</dependency>
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
+			<!-- 
 			<version>${brms.version}</version>
+			 -->
 		</dependency>
 		
 		<!-- for dtable parsing -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
+			<!-- 
 			<version>${brms.version}</version>
+			 -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
+			<!-- 
 			<version>${brms.version}</version>
+			 -->
 		</dependency>
 		
 		<!-- TODO: use the version from the distro (tmp/jboss-bpms-engine/lib/protobuf-java-2.5.0.jar)-->
@@ -244,7 +281,9 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr-runtime</artifactId>
+			<!-- 
 			<version>${brms.version}</version>
+			 -->
 		</dependency>
 		
 		<!-- TODO: why is this not inheriting from parent? -->
@@ -253,6 +292,13 @@
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<!-- to force module build order only -->
+		<dependency>
+			<groupId>org.jboss.quickstarts.brms6</groupId>
+			<artifactId>rule-domain</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>
