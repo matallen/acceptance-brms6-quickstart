@@ -6,7 +6,6 @@ mvn 'install' the "maven-kie-deployer-plugin" from https://github.com/matallen/m
 run './install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>'
 
 
-
 ### Structure
 | Module         | Notes         |
 | -------------  |:-------------:|
