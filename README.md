@@ -2,9 +2,8 @@ acceptance-brms6-quickstart
 ===========================
 
 ### Pre-conditions
-mvn 'install' the "maven-kie-deployer-plugin" from https://github.com/matallen/maven-kie-deployer-plugin
-run './install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>'
-
+* mvn 'install' the "maven-kie-deployer-plugin" from https://github.com/matallen/maven-kie-deployer-plugin
+* run './install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>'
 
 
 ### Structure
