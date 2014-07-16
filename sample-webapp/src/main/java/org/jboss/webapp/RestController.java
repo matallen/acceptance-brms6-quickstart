@@ -43,8 +43,8 @@ public class RestController {
       
       ReleaseId releaseId = kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", "6.0.0-SNAPSHOT");
       
-      Object x=new NaughtyPrivateAccessor(kieServices.getRepository()).getField("kieModuleRepo");
-      System.out.println(x);
+//      Object x=new NaughtyPrivateAccessor(kieServices.getRepository()).getField("kieModuleRepo");
+//      System.out.println(x);
 //      HashMap xx=(HashMap)new NaughtyPrivateAccessor(x).getField("kieModules");
 //      System.out.println(xx.size());
 //      System.out.println(xx);
