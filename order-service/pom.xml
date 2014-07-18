@@ -7,21 +7,8 @@
 		<version>6.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.quickstarts.brms6</groupId>
-	<artifactId>sample-webapp</artifactId>
+	<artifactId>order-service</artifactId>
 	<packaging>war</packaging>
-	
-	<repositories>
-	<repository>
-        <id>client-local</id>
-        <url>file:///home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/bpms-local-m2repo</url>
-        <releases>
-           <enabled>true</enabled>
-        </releases>
-        <snapshots>
-          <enabled>true</enabled>
-        </snapshots>        
-     </repository>
-	</repositories>
 	
 	<dependencies>
 		<dependency>
@@ -125,6 +112,38 @@
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>2.2.1.GA</version>
 		</dependency>
+		
+		
+		<dependency>
+            <groupId>org.jboss.quickstarts.brms6</groupId>
+            <artifactId>business-rules</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.jboss.quickstarts.brms6</groupId>
+            <artifactId>rule-domain</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
+        -->
+        
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2.5</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		
 	</dependencies>
 </project>

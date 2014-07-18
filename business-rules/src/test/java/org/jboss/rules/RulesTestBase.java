@@ -4,8 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.drools.decisiontable.InputType;
@@ -18,7 +19,6 @@ import org.kie.api.builder.Message;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.internal.io.ResourceFactory;
 
 public class RulesTestBase {
 	private KieSession session;
@@ -71,12 +71,15 @@ public class RulesTestBase {
 	  return fireAllRules(new String[]{});
 	}
 	public <T> int fireAllRules(T... facts){
+	  return fireAllRules(Arrays.asList(facts));
+	}
+	public <T> int fireAllRules(List<T> facts){
 //		EventListener listener=new EventListener();
 		try{
 //			session.addEventListener((WorkingMemoryEventListener)listener);
 		  if (null!=facts){
   			for(T fact:facts){
-  			  if (Collection.class.isAssignableFrom(Collection.class)){
+  			  if (Collection.class.isAssignableFrom(fact.getClass())){
   			    for(Object f:(Collection)fact)
   			      session.insert(f);
   			  }else

@@ -1,0 +1,54 @@
+package org.jboss.order.domain;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+public class Order {
+  
+  private String id;
+  private Country country;
+  private double amount;
+  private String[] items;
+  
+  // rule setters
+  private String risk;
+  private String recommendation;
+  
+  public Order(){} //for json
+  public Order(String id, Country country, double amount, String[] items) {
+    super();
+    this.id=id;
+    this.country=country;
+    this.amount=amount;
+    this.items=items;
+  }
+  
+  public String getId() {
+    return id;
+  }
+  public Country getCountry() {
+    return country;
+  }
+  public double getAmount() {
+    return amount;
+  }
+  public String[] getItems() {
+    return items;
+  }
+  public String getRisk() {
+    return risk;
+  }
+  public void setRisk(String risk) {
+    this.risk=risk;
+  }
+  public String getRecommendation() {
+    return recommendation;
+  }
+  public void setRecommendation(String recommendation) {
+    this.recommendation=recommendation;
+  }
+  
+  public String toString(){
+    return ToStringBuilder.reflectionToString(this);
+  }
+  
+}

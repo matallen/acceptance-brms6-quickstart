@@ -18,7 +18,7 @@
 		<module>acceptance</module>
 		<module>business-rules</module>
 		<module>rule-domain</module>
-		<module>sample-webapp</module>
+		<module>order-service</module>
 	</modules>
 	
 	<profiles>

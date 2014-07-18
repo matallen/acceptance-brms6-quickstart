@@ -22,6 +22,9 @@
 	<logger name="org.drools">
 		<level value="debug" />
 	</logger>
+	<logger name="org.jboss.webapp">
+		<level value="debug" />
+	</logger>
 	
 	<root>
 		<priority value="WARN" />

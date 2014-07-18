@@ -2,8 +2,13 @@ acceptance-brms6-quickstart
 ===========================
 
 ### Pre-conditions
-* mvn 'install' the "maven-kie-deployer-plugin" from https://github.com/matallen/maven-kie-deployer-plugin
-* run './install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>'
+* Install the maven-kie-deployer-plugin that pushes a pre-built kie module into a running BPM Suite
+'''git clone https://github.com/matallen/maven-kie-deployer-plugin'''
+'''cd maven-kie-deployer-plugin'''
+'''mvn clean install -DskipTests'''
+
+* Install the "business-central" BPM Suite webapp into your local m2 repo because its not available in a public repo yet
+'''./install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>'''
 
 
 ### Structure

@@ -9,44 +9,6 @@
 	<groupId>org.jboss.quickstarts.brms6</groupId>
 	<artifactId>business-rules</artifactId>
 	<packaging>kjar</packaging>
-<!--
-<repositories>
-<repository>
-        <id>busines-central-m2</id>
-        <url>http://localhost:8080/business-central/maven2</url>
-     </repository>
-</repositories>
--->
-			<!-- <url>file:///home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/bpms-local-m2repo</url> -->
-<!--
-	<repositories>
-		<repository>
-			<id>local</id>
-			<url>http://localhost:8080/business-central/maven2</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
--->
-	
-	<!--
-	<distributionManagement>
-		<repository>
-			<id>deployment</id>
-			<name>Internal Releases</name>
-			<url>http://your.server.com:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>deployment</id>
-			<name>Internal Releases</name>
-			<url>http://your.server.com:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-	-->
 	
 	<build>
 	
@@ -63,109 +25,7 @@
 				<version>${brms.version}</version>
 				-->
 				<version>${kie-maven-plugin.version}</version>
-				<!-- -->
 				<extensions>true</extensions>
-					<!-- TODO: use the version from the distro (tmp/jboss-bpms-engine/lib/protobuf-java-2.5.0.jar)-->
-					<!--
-				<dependencies>
-					<dependency>
-						<groupId>com.google.protobuf</groupId>
-						<artifactId>protobuf-java</artifactId>
-						<version>2.5.0</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-core</artifactId>
-						<version>3.1.0</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jbpm</groupId>
-						<artifactId>jbpm-flow-builder</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jbpm</groupId>
-						<artifactId>jbpm-flow</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					
-					<dependency>
-						<groupId>org.kie</groupId>
-						<artifactId>kie-api</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.kie</groupId>
-						<artifactId>kie-internal</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.drools</groupId>
-						<artifactId>drools-core</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.drools</groupId>
-						<artifactId>drools-decisiontables</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.drools</groupId>
-						<artifactId>drools-compiler</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.drools</groupId>
-						<artifactId>drools-templates</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jbpm</groupId>
-						<artifactId>jbpm-bpmn2</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.poi</groupId>
-						<artifactId>poi</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.poi</groupId>
-						<artifactId>poi-ooxml</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.antlr</groupId>
-						<artifactId>antlr-runtime</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.thoughtworks.xstream</groupId>
-						<artifactId>xstream</artifactId>
-						<version>1.4.7</version>
-					</dependency>
-					<dependency>
-						<groupId>org.eclipse.jdt.core.compiler</groupId>
-						<artifactId>ecj</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.mvel</groupId>
-						<artifactId>mvel2</artifactId>
-						<version>${brms.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-						<version>1.7.2</version>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-log4j12</artifactId>
-						<version>1.7.2</version>
-					</dependency>
-				</dependencies>
-					-->
 			</plugin>
 		</plugins>
 	</build>
@@ -230,6 +90,7 @@
 			<artifactId>kie-ci</artifactId>
 			<!--
 			<version>6.2.0-SNAPSHOT</version>
+			<version>6.1.0CR2</version>
 			-->
 			<version>${brms.version}</version>
 		</dependency>
@@ -243,32 +104,20 @@
 		<dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
 			<artifactId>ecj</artifactId>
-			<!-- 
-			<version>${brms.version}</version>
-			 -->
 		</dependency>
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
-			<!-- 
-			<version>${brms.version}</version>
-			 -->
 		</dependency>
 		
 		<!-- for dtable parsing -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<!-- 
-			<version>${brms.version}</version>
-			 -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<!-- 
-			<version>${brms.version}</version>
-			 -->
 		</dependency>
 		
 		<!-- TODO: use the version from the distro (tmp/jboss-bpms-engine/lib/protobuf-java-2.5.0.jar)-->
@@ -281,9 +130,6 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr-runtime</artifactId>
-			<!-- 
-			<version>${brms.version}</version>
-			 -->
 		</dependency>
 		
 		<!-- TODO: why is this not inheriting from parent? -->

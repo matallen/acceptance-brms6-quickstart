@@ -108,9 +108,10 @@
 									<org.guvnor.m2repo.dir>${bpms-local.m2repo}</org.guvnor.m2repo.dir>
 									<!-- maven settings for BPMS remote repo -->
 									<kie.maven.settings.custom>${project.build.directory}/classes/settings.xml</kie.maven.settings.custom>
+									<kie.maven.client.settings.custom>${project.build.directory}/classes/client-settings.xml</kie.maven.client.settings.custom>
 									
 									<!-- 
-									these were added in an attempt to get bpms working on eap-6 - it failed. 
+									these were added in an attempt to get bpms working on eap-6 - it failed but I dont know why. 
 									<jboss.server.base.dir>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1/standalone</jboss.server.base.dir>
 									<user.dir>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1</user.dir>
 									<logging.configuration>/home/mallen/Work/poc/acceptance-brms6-quickstart/jboss-eap-6.1/standalone/configuration/logging.properties</logging.configuration>
@@ -213,17 +214,6 @@
 									</configfile>
 								</configfiles>
 								<deployables>
-									<!-- 
-									<deployable>
-										<groupId>org.kie</groupId>
-										<artifactId>kie-drools-wb-distribution-wars</artifactId>
-										<classifier>tomcat7.0</classifier>
-										<type>war</type>
-										<properties>
-											<context>business-central</context>
-										</properties>
-									</deployable>
-									 -->
 									<deployable>
 										<groupId>org.kie</groupId>
 										<artifactId>kie-drools-wb-distribution-wars</artifactId>
@@ -235,12 +225,13 @@
 									</deployable>
 									<deployable>
 										<groupId>org.jboss.quickstarts.brms6</groupId>
-										<artifactId>sample-webapp</artifactId>
+										<artifactId>order-service</artifactId>
 										<type>war</type>
 										<properties>
-											<context>webapp</context>
+											<context>order-service</context>
 										</properties>
 									</deployable>
+									<!--
 									<deployable>
 										<groupId>org.sonatype.nexus</groupId>
 										<artifactId>nexus-webapp</artifactId>
@@ -249,8 +240,7 @@
 											<context>nexus</context>
 										</properties>
 									</deployable>
-									<!-- 
-									 -->
+									-->
 								</deployables>
 							</configuration>
 						</configuration>
@@ -290,13 +280,14 @@
 	</profiles>
 
 	<dependencies>
-
+		<!--
 		<dependency>
 			<groupId>org.sonatype.nexus</groupId>
 			<artifactId>nexus-webapp</artifactId>
 			<version>2.8.1-01</version>
 			<type>war</type>
 		</dependency>
+		-->
 
 		<dependency>
 			<groupId>org.kie</groupId>
@@ -307,12 +298,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.quickstarts.brms6</groupId>
-			<artifactId>sample-webapp</artifactId>
+			<artifactId>order-service</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
-		
-		
 		
 		
 		<!-- required for deploying on Tomcat7 -->
@@ -408,5 +397,17 @@
 			<artifactId>business-rules</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<!-- for http interactions -->
+		<dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.5</version>
+        </dependency>
 	</dependencies>
 </project>
