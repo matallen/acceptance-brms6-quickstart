@@ -25,7 +25,7 @@ public class RiskServiceSteps {
   
   @Given("^the order service is deployed$")
   public void the_risk_service_is_deployed() throws Throwable {
-    assertEquals(200, given().when().get("http://localhost:8080/order-service/rest/version").getStatusCode());
+    assertEquals(200, given().when().get("http://localhost:9080/order-service/rest/version").getStatusCode());
   }
 
   @Given("^an order exists with the following details:$")
@@ -48,7 +48,7 @@ public class RiskServiceSteps {
     
     for(Order order:orders){
       String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
-      Response response=given().when().body(payload).post("http://localhost:8080/order-service/rest/riskcheck");
+      Response response=given().when().body(payload).post("http://localhost:9080/order-service/rest/riskcheck");
       String responseString=response.asString();
       System.out.println(responseString);
       assertEquals(200, response.getStatusCode());
