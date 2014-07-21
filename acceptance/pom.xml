@@ -44,6 +44,7 @@
 	<profiles>
 		<profile>
 			<id>brms</id>
+			<activation><activeByDefault>false</activeByDefault></activation>
 			<build>
 				<resources>
 					<resource>
@@ -277,6 +278,48 @@
 				</plugins>
 			</build>
 		</profile>
+		
+		<profile>
+            <id>itest</id>
+            <activation><activeByDefault>false</activeByDefault></activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.15</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <failIfNoTests>true</failIfNoTests>
+                            <parallel>none</parallel>
+                            <threadCount>1</threadCount>
+                            <includes>
+                                <include>**/*RunCucumberTests.java</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 	</profiles>
 
 	<dependencies>
@@ -293,6 +336,9 @@
 			<groupId>org.kie</groupId>
 			<artifactId>kie-drools-wb-distribution-wars</artifactId>
 			<classifier>tomcat7.0</classifier>
+			<!--
+			<version>6.1.0.CR2</version>
+			-->
 			<version>${brms.version}</version>
 			<type>war</type>
 		</dependency>
@@ -340,6 +386,7 @@
 			<artifactId>kie-tomcat-integration</artifactId>
 			<!--
 			TODO: MALLEN DEFECT! missing artifact for org.kie:kie-wb-distributions:pom:6.0.3-redhat-4 in http://maven.repository.redhat.com/techpreview/all
+			<version>6.0.3-redhat-4</version>
 			<version>${brms.version}</version>
 			-->
 			<version>6.0.2-redhat-6</version>

@@ -1,20 +1,21 @@
 package risk.rules
 
 import org.jboss.order.domain.Order;
+import org.jboss.order.domain.Country;
 
 rule "accept G8 above 100" when
-    $o:Order(amount>=100, country.toString in ("GBP", "USA"))
+    $o:Order(amount>=100)//, country in (Country.GBR, Country.USA))
 then
-    $o.setRisk("LOW");
-    $o.setRecommendation("ACCEPT");
+//    $o.setRisk("LOW");
+//    $o.setRecommendation("ACCEPT");
 //	System.out.println("fired! - "+drools.getRule().getName());
 end
 
 rule "reject non G8 above 100" when
-    $o:Order(amount>=100, country.toString not in ("GBP", "USA"))
+    $o:Order(amount>=100)//, country not in (Country.GBR, Country.USA))
 then
-    $o.setRisk("HIGH");
-    $o.setRecommendation("REJECT");
+//    $o.setRisk("HIGH");
+//    $o.setRecommendation("REJECT");
 //    System.out.println("fired! - "+drools.getRule().getName());
 end
 

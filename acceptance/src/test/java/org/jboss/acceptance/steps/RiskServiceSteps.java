@@ -3,14 +3,17 @@ package org.jboss.acceptance.steps;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.jboss.acceptance.utils.Json;
 import org.jboss.order.domain.Order;
 import org.jboss.order.domain.Country;
 
-import com.google.common.collect.Lists;
 import com.jayway.restassured.response.Response;
 
 import cucumber.api.java.en.Given;
@@ -18,7 +21,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class RiskServiceSteps {
-  private List<Order> orders=Lists.newArrayList();
+  private List<Order> orders=new ArrayList<Order>();
   
   @Given("^the order service is deployed$")
   public void the_risk_service_is_deployed() throws Throwable {
@@ -55,7 +58,7 @@ public class RiskServiceSteps {
       order.setRecommendation(responseOrder.getRecommendation());
     }
   }
-
+  
   @Then("^the results should be:$")
   public void the_result_is(List<Map<String,String>> table) throws Throwable {
     for(Map<String,String> row:table){

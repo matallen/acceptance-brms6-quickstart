@@ -22,6 +22,18 @@ public class Order {
     this.items=items;
   }
   
+  public void setId(String id) {
+    this.id=id;
+  }
+  public void setCountry(Country country) {
+    this.country=country;
+  }
+  public void setAmount(double amount) {
+    this.amount=amount;
+  }
+  public void setItems(String[] items) {
+    this.items=items;
+  }
   public String getId() {
     return id;
   }

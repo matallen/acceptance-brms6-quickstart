@@ -2,13 +2,13 @@ package risk.def
 
 import org.jboss.order.domain.Order;
 
-//rule "init risk rules"
-//salience 1000000
-//when
-//    $o:Order()
-//then
+rule "init risk rules"
+salience 1000000
+when
+    $o:Order()
+then
 //    $o.setRisk("HIGH");
 //    $o.setRecommendation("REJECT");
-//	System.out.println("fired! - "+drools.getRule().getName());
-//end
+////	System.out.println("fired! - "+drools.getRule().getName());
+end
 

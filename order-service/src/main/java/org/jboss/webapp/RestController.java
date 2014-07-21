@@ -12,9 +12,10 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.jboss.order.domain.Order;
 import org.jboss.order.domain.Country;
+import org.jboss.order.domain.Order;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieScanner;
@@ -31,50 +32,58 @@ import org.kie.api.event.rule.RuleFlowGroupActivatedEvent;
 import org.kie.api.event.rule.RuleFlowGroupDeactivatedEvent;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.internal.KnowledgeBase;
-import org.kie.internal.KnowledgeBaseFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
 @Path("/")
 public class RestController {
   private static final Logger log=Logger.getLogger(RestController.class);
-	private static KieScanner kScanner=null;
-	private static KieContainer kContainer=null;
-	
-	@GET
+  private static KieScanner kScanner=null;
+  private static KieContainer kContainer=null;
+  
+  @GET
   @Path("/version")
-	public Response displayVersion() {
+  public Response displayVersion() {
     String result="Version info unknown";
     try {
       result = IOUtils.toString(this.getClass().getResourceAsStream("/META-INF/MANIFEST.MF")).replaceAll("\n", "<br/>");
     } catch (Exception sink) {}
     return Response.status(200).entity(result).build();
-	}
-	
-	public static void main(String[] asd) throws JsonGenerationException, JsonMappingException, IOException{
-	  System.out.println(Json.toJson(new Order("01", Country.GBR, 100, new String[]{})));
-	  System.out.println(Json.toObject("{\"id\":\"01\",\"country\":\"GBP\",\"amount\":100.0,\"items\":[]}", Order.class));
-	}
-	
+  }
+  
+  public static void main(String[] asd) throws JsonGenerationException, JsonMappingException, IOException{
+//    System.out.println(Json.toJson(new Order("01", Country.GBR, 100, new String[]{})));
+//    System.out.println(Json.toObject("{\"id\":\"01\",\"country\":\"GBP\",\"amount\":100.0,\"items\":[]}", Order.class));
+    
+    System.setProperty("kie.maven.client.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/client-settings.xml");
+    Order order=new Order("1", Country.GBR, 100, new String[]{});
+    System.out.println(new RestController().execute(order).getEntity());
+    
+  }
+
   @POST
   @Path("/riskcheck")
-  public Response execute(@Context HttpServletRequest request) {
+  public Response execute(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+    String payload=IOUtils.toString(request.getInputStream());
+    log.info("[/riskcheck] Called with payload ["+payload+"]");
+    
+    Order order=(Order)Json.toObject(payload, Order.class);
+    
+    return execute(order);
+  }
+  
+  public Response execute(Order order) {
     try{
-      String payload=IOUtils.toString(request.getInputStream());
-      log.info("[/riskcheck] Called with payload ["+payload+"]");
-      
-      Order order=(Order)Json.toObject(payload, Order.class);
       
       // defaults - this is because if you operate on all facts then drools is slower than java, so set your defaults outside of the drools engine if you want performance
-//      order.setRisk("HIGH");
-//      order.setRecommendation("REJECT");
+      System.err.println("\n***************\nWARNING: RULES ARE NOT DOING ANYTHING!!!!!!!\n****************");
+      order.setRisk("HIGH");
+      order.setRecommendation("REJECT");
       
       
       String originalKieMavenSettingsCustom=System.getProperty("kie.maven.settings.custom");
       String kieMavenSettingsCustom=System.getProperty("kie.maven.client.settings.custom");
 //    System.setProperty("kie.maven.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/client-settings.xml");
       System.setProperty("kie.maven.settings.custom", kieMavenSettingsCustom);
-      log.debug("using [kie.maven.settings.custom] = "+kieMavenSettingsCustom);
       
       long initKieServices=0,initKieContainer=0,initKieScanner=0,initKieSession,fireAllRules;
       
@@ -84,13 +93,9 @@ public class RestController {
         initKieServices=Metrics.endReset();
         
         // finds the kjar in the maven repo pointed to by the "-Dkie.maven.settings.custom=settings.xml"
+        log.debug("using [kie.maven.settings.custom] = "+kieMavenSettingsCustom);
         kContainer = kieServices.newKieContainer(kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", "6.0.0-SNAPSHOT"));
         initKieContainer=Metrics.endReset();
-
-//        kScanner=kieServices.newKieScanner(kContainer);
-//        initKieScanner=Metrics.endReset();
-//      kScanner.scanNow();
-//        kScanner.start(10000l);
       }
       
       AgendaEventListener listener=new AgendaEventListener() {
@@ -138,7 +143,7 @@ public class RestController {
         
         s.insert(order);
         
-        int rules = s.fireAllRules();
+        s.fireAllRules();
         fireAllRules=Metrics.endReset();
         
         log.error("Order after rules = "+order);
