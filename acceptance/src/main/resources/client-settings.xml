@@ -11,7 +11,7 @@
         <repository>
           <id>client-remote</id>
           <name>Client Remote</name>
-          <url>http://localhost:8080/business-central/maven2/</url>
+          <url>http://localhost:9080/business-central/maven2/</url>
           <releases>
              <enabled>true</enabled>
           </releases>
