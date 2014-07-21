@@ -96,8 +96,8 @@
 									<artifactId>tomcat</artifactId>
 									<version>7.0.35</version>
 								</artifactInstaller>
-								<output>target/logs/container.log</output>
-								<log>target/logs/cargo-plugin.log</log>
+								<output>${project.build.directory}/logs/container.log</output>
+								<log>${project.build.directory}/logs/cargo-plugin.log</log>
 								<timeout>120000</timeout>
 								<systemProperties>
 								<!-- 
@@ -189,27 +189,27 @@
 								</properties>
 								<configfiles>
 									<configfile>
-										<file>target/classes/tomcat7x/server.xml</file>
+										<file>${project.build.directory}/classes/tomcat7x/server.xml</file>
 										<todir>conf/</todir>
 										<tofile>server.xml</tofile>
 									</configfile>
 									<configfile>
-										<file>target/classes/tomcat7x/tomcat-users.xml</file>
+										<file>${project.build.directory}/classes/tomcat7x/tomcat-users.xml</file>
 										<todir>conf/</todir>
 										<tofile>tomcat-users.xml</tofile>
 									</configfile>
 									<configfile>
-										<file>target/classes/tomcat7x/context.xml</file>
+										<file>${project.build.directory}/classes/tomcat7x/context.xml</file>
 										<todir>conf/</todir>
 										<tofile>context.xml</tofile>
 									</configfile>
 									<configfile>
-										<file>target/classes/tomcat7x/btm-config.properties</file>
+										<file>${project.build.directory}/classes/tomcat7x/btm-config.properties</file>
 										<todir>conf/</todir>
 										<tofile>btm-config.properties</tofile>
 									</configfile>
 									<configfile>
-										<file>target/classes/tomcat7x/resources.properties</file>
+										<file>${project.build.directory}/classes/tomcat7x/resources.properties</file>
 										<todir>conf/</todir>
 										<tofile>resources.properties</tofile>
 									</configfile>
