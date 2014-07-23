@@ -6,7 +6,9 @@ acceptance-brms6-quickstart
 * Install the maven-kie-deployer-plugin that pushes a pre-built kie module into a running BPM Suite
 
 ```git clone https://github.com/matallen/maven-kie-deployer-plugin```
+
 ```cd maven-kie-deployer-plugin```
+
 ```mvn clean install -DskipTests```
 
 * Install the "business-central" BPM Suite webapp into your local m2 repo because its not available in a public repo yet
