@@ -2,6 +2,7 @@ package org.jboss.acceptance;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
@@ -9,4 +10,5 @@ import cucumber.api.junit.Cucumber;
 public class RunCucumberTests {
   @Test
   public void runAcceptanceTests(){}
+  
 }

@@ -3,29 +3,69 @@ package org.jboss.acceptance.steps;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
+import org.jboss.acceptance.CommonSteps;
 import org.jboss.acceptance.utils.Json;
-import org.jboss.order.domain.Order;
+import org.jboss.acceptance.utils.ToHappen;
+import org.jboss.acceptance.utils.Wait;
 import org.jboss.order.domain.Country;
+import org.jboss.order.domain.Order;
+import org.junit.BeforeClass;
 
+import com.google.common.base.Preconditions;
 import com.jayway.restassured.response.Response;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class RiskServiceSteps {
+public class RiskServiceSteps{
   private List<Order> orders=new ArrayList<Order>();
   
+  // this doesnt work cos the cucumber api annotation causes an indexOutOfBoundsError - upgrade cukes?
+  private static boolean dunit = false;
+//  @Before
+  public void beforeAll(){
+    if(!dunit) {
+      Runtime.getRuntime().addShutdownHook(new Thread() {
+        public void run() {
+          System.out.println("@AfterAll");
+        }
+      });
+      System.out.println("@BeforeAll");
+      beforeEachScenario();
+      dunit = true;
+    }
+  }
+  
+  public void beforeEachScenario(){
+    boolean successfulRuleDeployment=Wait.For(20, new ToHappen() {
+      @Override
+      public boolean hasHappened() {
+        String username=System.getProperty("bpms.username")!=null?System.getProperty("bpms.username"):"admin";
+        String password=System.getProperty("bpms.password")!=null?System.getProperty("bpms.password"):"admin";
+        String serverUrl=System.getProperty("bpms.base.url")!=null?System.getProperty("bpms.base.url"):"http://localhost:8080/business-central";
+        Preconditions.checkArgument(username!=null, "bpms.username cannot be null");
+        Preconditions.checkArgument(password!=null, "bpms.password cannot be null");
+        Preconditions.checkArgument(serverUrl!=null, "bpms.base.url cannot be null");
+        String response=given().when().auth().preemptive().basic(username, password).get(serverUrl+"/rest/deployment").asString();
+        boolean result=response.contains("business-rules");
+//        System.out.println("[found? "+result+"] deployments on BPMS = "+response);
+        return result;
+      }
+    });
+    assertEquals("Rules were not deployed", true, successfulRuleDeployment);
+//    new CommonSteps().beforeEachScenario(); // you cannot extend classes that define cucumber step definitions or hooks
+  }
+  
   @Given("^the order service is deployed$")
-  public void the_risk_service_is_deployed() throws Throwable {
-    assertEquals(200, given().when().get("http://localhost:9080/order-service/rest/version").getStatusCode());
+  public void the_order_service_is_deployed() throws Throwable {
+    beforeEachScenario(); // you cannot extend classes that define cucumber step definitions or hooks
+    assertEquals(200, given().when().get("http://localhost:8080/order-service/rest/version").getStatusCode());
   }
 
   @Given("^an order exists with the following details:$")
@@ -41,16 +81,12 @@ public class RiskServiceSteps {
   }
 
   @When("^the order is submitted$")
-  public void the_order_is_submitted_to_the_risk_service() throws Throwable {
-    for(Object key:System.getProperties().keySet()){
-      System.out.println("[SYSPROP] "+key+"="+System.getProperty((String)key));
-    }
-    
+  public void the_order_is_submitted() throws Throwable {
     for(Order order:orders){
       String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
-      Response response=given().when().body(payload).post("http://localhost:9080/order-service/rest/riskcheck");
+      Response response=given().when().body(payload).post("http://localhost:8080/order-service/rest/riskcheck");
       String responseString=response.asString();
-      System.out.println(responseString);
+      System.out.println("riskcheck response = "+responseString);
       assertEquals(200, response.getStatusCode());
       
       Order responseOrder=Json.toObject(responseString, Order.class);
@@ -60,7 +96,7 @@ public class RiskServiceSteps {
   }
   
   @Then("^the results should be:$")
-  public void the_result_is(List<Map<String,String>> table) throws Throwable {
+  public void the_result_should_be(List<Map<String,String>> table) throws Throwable {
     for(Map<String,String> row:table){
       String id=row.get("ID");
       String riskRating=row.get("Risk Rating");
@@ -75,57 +111,4 @@ public class RiskServiceSteps {
     assertEquals(table.size(), orders.size());
   }
   
-//  @Given("^brms is accessible on \"([^\"]*)\"$")
-//  public void brmsIsUp(String brmsUrl) throws Exception{
-//    HttpClient client=new DefaultHttpClient();
-//    HttpGet get=new HttpGet(brmsUrl+"/rest/packages");
-//    HttpResponse response=client.execute(get);
-//    System.out.println("XXXXXXXX="+response.getStatusLine().getStatusCode());
-//    assertEquals(response.getStatusLine().getStatusCode(), 200);
-//  }
-//  
-//  @Given("^the url \"([^\"]*)\" returns an http \"([^\"]*)\"$")
-//  public void the_url_returns_an_http(String url, String responseCode) throws Throwable {
-//    HttpClient client=new DefaultHttpClient();
-//    HttpResponse response=client.execute(new HttpGet(url));
-//    if (200!=response.getStatusLine().getStatusCode())
-//      System.out.println(IOUtils.toString(response.getEntity().getContent()));
-//    assertEquals(Integer.parseInt(responseCode), response.getStatusLine().getStatusCode());
-//  }
-//  
-//  @Given("^the fuse command \"([^\"]*)\" contains \"([^\"]*)\"$")
-//  public void the_fuse_command_contains(String arg1, String arg2) throws Throwable {
-////    System.out.println("\n\nXXXXXXXXXXXXX");
-////    
-////    String osgiListResult=executeCommand("features:list | grep installed");
-////    System.out.println("osgiListResult = \n"+osgiListResult);
-////    System.out.println("XXXXXXXXXXXXX\n\n");
-//    
-////    String result=executeCommand("osgi:list -t 0", 3000l, false);
-////    System.out.println(result);
-//  }
-//
-//  
-//  /*
-//  @Given("^the url \"([^\"]*)\" returns an http \"([^\"]*)\"$")
-//  public void httpPingReturns(String url, String responseCode) throws Exception{
-//    HttpClient client=new DefaultHttpClient();
-//    HttpGet get=;
-//    HttpResponse response=client.execute(new HttpGet(url));
-//    assertEquals(response.getStatusLine().getStatusCode(), Integer.parseInt(responseCode));
-//  }
-//  */
-//  
-//  public String executeCommand(String command){
-//    try{
-//      System.out.println("executing [/home/mallen/jboss-fuse-6.0.0.redhat-024/bin/client -u admin -p admin "+command+"]");
-//      Process p=Runtime.getRuntime().exec(new String[]{"/home/mallen/jboss-fuse-6.0.0.redhat-024/bin/client","-u","admin","-p","admin", command});
-//      String result=IOUtils.toString(p.getInputStream());
-//      System.out.println("result of ["+command+"]\n"+result);
-//      return result;
-//    }catch(Exception sink){
-//      return null;
-//    }
-//  }
-
 }

@@ -20,8 +20,11 @@
 		<level value="DEBUG" />
 	</logger>
 	<logger name="org.kie.integration">
-		<level value="DEBUG" />
-	</logger>
+        <level value="DEBUG" />
+    </logger>
+    <logger name="com.jayway.restassured">
+        <level value="WARN" />
+    </logger>
 	
 	<root>
 		<priority value="debug" />

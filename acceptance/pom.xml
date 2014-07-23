@@ -124,7 +124,13 @@
 									<bitronix.tm.configuration>${project.build.directory}/cargo/configurations/tomcat7x/conf/btm-config.properties</bitronix.tm.configuration>
 									<jbpm.tsr.jndi.lookup>=java:comp/env/TransactionSynchronizationRegistry</jbpm.tsr.jndi.lookup>
 									<!-- /for deployment on Tomcat7 -->
+									<dummy-order-service>true</dummy-order-service>
 									
+									<!--
+									<bpms.username>admin</bpms.username>
+									<bpms.password>admin</bpms.password>
+									<bpms.base.url>http://localhost:8080/business-central</bpms.base.url>
+									-->
 								</systemProperties>
 								<!-- these end up in <tomcat_home>/common/lib -->
 								<dependencies>

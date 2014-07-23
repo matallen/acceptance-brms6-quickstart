@@ -35,7 +35,7 @@ import org.kie.api.runtime.KieSession;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
 @Path("/")
-public class RestController {
+public class RestController extends javax.ws.rs.core.Application{
   private static final Logger log=Logger.getLogger(RestController.class);
   private static KieScanner kScanner=null;
   private static KieContainer kContainer=null;
@@ -79,6 +79,11 @@ public class RestController {
       order.setRisk("HIGH");
       order.setRecommendation("REJECT");
       
+      if (System.getProperty("dummy-order-service")!=null){
+        String result=Json.toJson(order);
+        log.info("[/riskcheck] Returning payload ["+result+"]");
+        return Response.status(200).entity(result).build();
+      }
       
       String originalKieMavenSettingsCustom=System.getProperty("kie.maven.settings.custom");
       String kieMavenSettingsCustom=System.getProperty("kie.maven.client.settings.custom");
