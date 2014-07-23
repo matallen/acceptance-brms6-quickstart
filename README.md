@@ -11,7 +11,7 @@ acceptance-brms6-quickstart
 
 ```mvn clean install -DskipTests```
 
-* Install the "business-central" BPM Suite webapp into your local m2 repo because its not available in a public repo yet
+* Install the "business-central" BPM Suite webapp into your local m2 repo because its not available in a public repo
 
 ```./install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>```
 
@@ -45,3 +45,6 @@ acceptance-brms6-quickstart
 in the cargo plugin config, add a <deployable> entry for your webapps maven GAV (groupId, artifactId and version) and it will be deployed
 
 
+### Notes
+
+** port 16080 was chosed for the web port because OpenShift will only allow ports between 15000-35530 to be bound 

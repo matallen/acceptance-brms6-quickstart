@@ -7,7 +7,7 @@
 	mvn clean package cargo:run -Pbrms
 	
 	http://localhost:8080/business-central/maven2/org/jboss/quickstarts/brms6/business-rules/6.0.0-SNAPSHOT/business-rules-6.0.0-SNAPSHOT.jar
-	http://localhost:8080/webapp/rest/rules/execute/test1
+	http://localhost:8080/order-service/rest/riskcheck
 	
 	-->
 	<modelVersion>4.0.0</modelVersion>
@@ -207,6 +207,7 @@
 										-Xmx1024m
 										-XX:MaxPermSize=256m
 									</cargo.jvmargs>
+									<cargo.servlet.port>16080</cargo.servlet.port>
 								</properties>
 								<configfiles>
 									<configfile>
@@ -280,7 +281,7 @@
 								</goals>
 								<configuration>
 									<debug>true</debug>
-									<serverUri>http://localhost:8080/business-central</serverUri>
+									<serverUri>http://localhost:16080/business-central</serverUri>
 									<username>admin</username>
 									<password>admin</password>
 									<timeoutInSeconds>60</timeoutInSeconds>
