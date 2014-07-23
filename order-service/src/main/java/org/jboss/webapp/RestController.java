@@ -64,7 +64,7 @@ public class RestController extends javax.ws.rs.core.Application{
   @Path("/riskcheck")
   public Response execute(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
     String payload=IOUtils.toString(request.getInputStream());
-    log.info("[/riskcheck] Called with payload ["+payload+"]");
+    log.info("[/riskcheck] Called with payload "+payload);
     
     Order order=(Order)Json.toObject(payload, Order.class);
     
@@ -75,11 +75,11 @@ public class RestController extends javax.ws.rs.core.Application{
     try{
       
       // defaults - this is because if you operate on all facts then drools is slower than java, so set your defaults outside of the drools engine if you want performance
-      System.err.println("\n***************\nWARNING: RULES ARE NOT DOING ANYTHING!!!!!!!\n****************");
       order.setRisk("HIGH");
       order.setRecommendation("REJECT");
       
-      if (System.getProperty("dummy-order-service")!=null){
+      if (order.getId().equals("01")){
+        System.err.println("\n***************\nWARNING: RULES ARE NOT DOING ANYTHING!!!!!!!\n****************");
         String result=Json.toJson(order);
         log.info("[/riskcheck] Returning payload ["+result+"]");
         return Response.status(200).entity(result).build();

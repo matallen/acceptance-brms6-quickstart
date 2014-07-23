@@ -92,7 +92,6 @@ public class OrderServiceRulesTest extends RulesTestBase{
 	private KieContainer kContainer=null;
 	private KieScanner kScanner=null;
 	@Test
-	@Ignore
 	public void testIntegration(){
 	  // TODO: set the system variable to force the use of a specific settings.xml to point to the http://localhost:8080/business-central/maven2
 //	  System.setProperty("kie.maven.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/settings.xml");
@@ -111,10 +110,10 @@ public class OrderServiceRulesTest extends RulesTestBase{
 //  	  kScanner.start(10000l);
 	  }
 	  
-    assertEquals(2, execute());
-    assertEquals(2, execute());
-    assertEquals(2, execute());
-    assertEquals(2, execute());
+    assertEquals(3, execute());
+    assertEquals(3, execute());
+    assertEquals(3, execute());
+    assertEquals(3, execute());
     
 	  System.clearProperty("kie.maven.settings.custom");
 	}

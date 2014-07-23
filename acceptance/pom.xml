@@ -28,7 +28,6 @@
 	</properties>
 	<!--
 	for cucumber-java
-	-->
     <repositories>
 		<repository>
 			<id>sonatype-snapshots</id>
@@ -38,6 +37,7 @@
 			</snapshots>
 		</repository>
     </repositories>	
+	-->
 	
 	
 	<build>
@@ -138,8 +138,8 @@
 									<jbpm.tsr.jndi.lookup>=java:comp/env/TransactionSynchronizationRegistry</jbpm.tsr.jndi.lookup>
 									<!-- /for deployment on Tomcat7 -->
 									<!--
-									-->
 									<dummy-order-service>true</dummy-order-service>
+									-->
 									
 									<!--
 									<bpms.username>admin</bpms.username>

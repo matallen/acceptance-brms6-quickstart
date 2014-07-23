@@ -8,7 +8,7 @@ And an order exists with the following details:
 When the order is submitted
 Then the results should be:
 |ID |Risk Rating | Recommendation |
-|01 |HIGH        | REJECT         |
+|02 |HIGH        | REJECT         |
 
 
 #Scenario: 02 - order service rejects high risk orders
