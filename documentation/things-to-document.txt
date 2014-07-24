@@ -1,0 +1,49 @@
+Features:
+ - tomcat
+ - BC and test app (order-service) uses their own m2 repositories for accurate testing
+
+Features TODO:
+ - eap6 (BC doesnt start properly, probly due to paths)
+ - openshift support (opens sockets using cargo plugin that OS doesnt allow)
+ - use drools-BOM as a dependency management import
+
+
+
+Defects:
+ - 6.0.3-redhat-4 doesnt contain the "kie-drools-wb-distribution-wars" in the public techpreview/all
+   - this means a manual install of the webapp as downloaded from the Red Hat Support Portal
+ - unable to deploy using eap-6 using cargo, resorted to using tomcat7 
+
+
+Best Practices:
+ - separate rule domain so you can version, release and manage it separately.
+ - separate business-rules module so you can unit test your technical rules in a development environment and use CI to ensure their integrity
+ - acceptance cycles the container, bpms and tested apps in the correct maven lifecycles, whilst keeping all state in the target folder to ensure integrity and consistency of the tests
+ - 
+
+How to install the dependencies (install folder scripts)
+
+
+How the m2repos work - 
+  ie. acceptance tomcat uses settings.xml and a target/bpms-repo as its local to ensure it doesnt just pick from the machine default,
+      and the client app (sample-webapp) uses target/client-repo as its local, and http://localhost:8080/business-central/maven2 as its remote so it uses BPMS as a maven repo 
+
+How to install an openshift jenkins instance
+
+How to install the necessary plugins for github integration
+ - Manage Jenkins->manage Plugins->Advanced->Check Now button(bottom right) and wait a while
+ - You will need the following plugins: Github Plugin, Cucumber Reports
+ 
+How to link github commit hooks with an openshift jenkins instance
+ - goto github/<repo>
+ - select "settings" (on the right)
+ - select "WebHooks& Services" (on the left)
+ - click "Add Webhook"
+ - type "https://jenkins2-mallen.rhcloud.com/github-webhook/" in payload url, and select "application/x-www-form-urlencoded" on content-type, then click "Add webhook" (green button)
+
+
+
+
+
+
+
