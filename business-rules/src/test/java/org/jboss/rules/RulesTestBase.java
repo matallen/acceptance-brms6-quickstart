@@ -16,12 +16,15 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.Message;
+import org.kie.api.definition.KiePackage;
+import org.kie.api.definition.rule.Rule;
+import org.kie.api.event.rule.AgendaEventListener;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
 public class RulesTestBase {
-	private KieSession session;
+	public KieSession session;
 	public static final String ruleDirectoryDefault="src/main/resources";
 	private KieServices kieServices=KieServices.Factory.get();
 	private KieFileSystem kfs=kieServices.newKieFileSystem();
@@ -52,8 +55,22 @@ public class RulesTestBase {
     Assert.assertEquals( 0, builder.getResults().getMessages( Message.Level.ERROR ).size() );
     System.out.println(builder.getResults());
 	}
-	
-	public KieSession loadRules(String packageNames) {
+
+  public KieSession loadKieSession(String kSessionId) {
+    session=KieServices.Factory.get().getKieClasspathContainer().newKieSession(kSessionId);
+
+    if (0==session.getKieBase().getKiePackages().size()) throw new RuntimeException("No rules in kBase!!!");
+
+    System.out.println("Rules:");
+    for (KiePackage kp : session.getKieBase().getKiePackages()) {
+      for (Rule r : kp.getRules()) {
+        System.out.println(r.getName());
+      }
+    }
+    return session;
+  }
+
+	public KieSession compileAndLoadKieSession(String packageNames) {
 		try {
 			kieServices.getRepository().removeKieModule(kieServices.getRepository().getDefaultReleaseId());			
 	    compileFromDisk(ruleDirectoryDefault, packageNames);
@@ -74,9 +91,9 @@ public class RulesTestBase {
 	  return fireAllRules(Arrays.asList(facts));
 	}
 	public <T> int fireAllRules(List<T> facts){
-//		EventListener listener=new EventListener();
+    AgendaEventListener listener=new SysErrAgendaEventListener();
 		try{
-//			session.addEventListener((WorkingMemoryEventListener)listener);
+		  session.addEventListener((AgendaEventListener)listener);
 		  if (null!=facts){
   			for(T fact:facts){
   			  if (Collection.class.isAssignableFrom(fact.getClass())){
@@ -87,8 +104,8 @@ public class RulesTestBase {
   			}
 		  }
 			return session.fireAllRules();
-//			session.removeEventListener((WorkingMemoryEventListener)listener);
 		}finally{
+		  session.removeEventListener(listener);
 			session.dispose();
 		}
 	}

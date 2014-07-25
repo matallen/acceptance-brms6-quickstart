@@ -1,6 +1,0 @@
-package schedules.S02
-
-rule "schedules.S02" when
-then
-	System.out.println("fired! - "+drools.getRule().getName());
-end

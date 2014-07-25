@@ -11,7 +11,7 @@ public class Utils {
   private static final Logger log=Logger.getLogger(Utils.class);
   
   public static void beforeScenarios(){
-    boolean successfulRuleDeployment=Wait.For(20, new ToHappen() {
+    boolean successfulRuleDeployment=Wait.For(30, new ToHappen() {
       @Override
       public boolean hasHappened() {
         String username=System.getProperty("bpms.username")!=null?System.getProperty("bpms.username"):"admin";

@@ -284,7 +284,7 @@
 									<serverUri>http://localhost:16080/business-central</serverUri>
 									<username>admin</username>
 									<password>admin</password>
-									<timeoutInSeconds>60</timeoutInSeconds>
+									<timeoutInSeconds>180</timeoutInSeconds>
 									<deployables>
 										<deployable>
 											<groupId>org.jboss.quickstarts.brms6</groupId>
@@ -307,7 +307,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.15</version>
                         <configuration>
@@ -316,6 +315,7 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.17</version>
                         <configuration>
                             <failIfNoTests>true</failIfNoTests>
                             <parallel>none</parallel>
@@ -407,6 +407,7 @@
 			<artifactId>kie-tomcat-integration</artifactId>
 			<!--
 			TODO: MALLEN DEFECT! missing artifact for org.kie:kie-wb-distributions:pom:6.0.3-redhat-4 in http://maven.repository.redhat.com/techpreview/all
+			TODO: add this artifact into local repo because RH QE team will not publish kie-tomcat-integration (or any UI modules) in future releases - https://bugzilla.redhat.com/show_bug.cgi?id=1056184
 			<version>6.0.3-redhat-4</version>
 			<version>${brms.version}</version>
 			-->

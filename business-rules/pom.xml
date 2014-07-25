@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>${project.groupId}.${project.artifactId}</name>
 	<parent>
@@ -9,9 +10,8 @@
 	<groupId>org.jboss.quickstarts.brms6</groupId>
 	<artifactId>business-rules</artifactId>
 	<packaging>kjar</packaging>
-	
+
 	<build>
-	
 		<plugins>
 			<!-- maven2+ -->
 			<!-- <plugin> <groupId>org.drools</groupId> <artifactId>drools-maven-plugin</artifactId> <version>${brms.version}</version> <extensions>true</extensions> </plugin> -->
@@ -21,13 +21,43 @@
 				<artifactId>kie-maven-plugin</artifactId>
 				<!--
 				<version>6.0.1.Final</version>
+				<version>${kie-maven-plugin.version}</version>
 				<version>6.2.0-SNAPSHOT</version>
 				<version>${brms.version}</version>
 				-->
-				<version>${kie-maven-plugin.version}</version>
+                <version>6.0.3-redhat-4</version>
 				<extensions>true</extensions>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.kie</groupId>
+										<artifactId>kie-maven-plugin</artifactId>
+										<versionRange>[6.0.3-redhat-4,)</versionRange>
+										<goals>
+											<goal>build</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<dependencies>
 		<dependency>

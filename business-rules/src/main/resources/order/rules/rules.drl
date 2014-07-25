@@ -1,0 +1,19 @@
+package risk.rules
+
+import org.jboss.order.domain.Order;
+import org.jboss.order.domain.Country;
+
+rule "accept G8 below 100" when
+    $o:Order(amount<100, country in (Country.GBR, Country.USA))
+then
+    $o.setRisk("LOW");
+    $o.setRecommendation("ACCEPT");
+end
+
+rule "reject non G8" when
+    $o:Order(country not in (Country.GBR, Country.USA))
+then
+    $o.setRisk("HIGH");
+    $o.setRecommendation("REJECT");
+end
+

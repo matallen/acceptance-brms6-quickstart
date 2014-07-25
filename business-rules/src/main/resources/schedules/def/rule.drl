@@ -1,7 +1,0 @@
-package schedules.def
-
-rule "schedules.def" when
-then
-	System.out.println("fired! - "+drools.getRule().getName());
-end
-

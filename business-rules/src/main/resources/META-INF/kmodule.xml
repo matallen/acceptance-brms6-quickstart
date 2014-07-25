@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
 	
-	<kbase name="defaultKieBase" packages="risk.def,risk.rules">
-		<ksession name="default.ksession" type="stateful"/>
+	<kbase name="defaultKieBase" packages="order.def,order.rules">
+		<ksession name="defaultKieBase.session" type="stateful"/>
 	</kbase>
 	
-    <kbase name="risk.kbase" packages="risk.def,risk.rules">
-        <ksession name="risk.ksession" type="stateful"/>
-    </kbase>
-
-	<!--
-	working: 
-    <kbase name="defaultKieBase" packages="schedules.def,schedules.S01">
-        <ksession name="default.ksession" type="stateful"/>
-    </kbase>
-	<kbase name="S01.kbase" packages="schedules.def,schedules.S01">
-		<ksession name="S01.ksession" type="stateful"/>
-	</kbase>
-	<kbase name="S02.kbase" packages="schedules.def,schedules.S02">
-		<ksession name="S02.ksession" type="stateful"/>
-	</kbase>
-	-->
 </kmodule>

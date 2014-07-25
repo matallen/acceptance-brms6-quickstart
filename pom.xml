@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+<!--
+
+
+mvn clean install -Pbrms,itest
+
+
+-->
 
 	<groupId>org.jboss.quickstarts</groupId>
 	<artifactId>brms6</artifactId>
@@ -28,7 +35,7 @@
 			<properties>
 				<!--brms.version>6.0.2.BRMS</brms.version-->
 				<brms.version>6.0.3-redhat-4</brms.version>
-				<kie-maven-plugin.version>6.1.0.CR2</kie-maven-plugin.version> <!-- because 6.0.3-redhat-4 has bug - https://issues.jboss.org/browse/DROOLS-373 -->
+				<kie-maven-plugin.version>6.1.0.CR2</kie-maven-plugin.version> <!-- because 6.0.3-redhat-4 has bug - https://issues.jboss.org/browse/DROOLS-373 / https://bugzilla.redhat.com/show_bug.cgi?id=1039676 -->
 			</properties>
 			<dependencyManagement>
 				<dependencies>
@@ -95,11 +102,11 @@
 			<id>jboss-nexus</id>
 			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
 		</pluginRepository>
+		-->
 		<pluginRepository>
 			<id>jboss-techpreview</id>
 			<url>http://maven.repository.redhat.com/techpreview/all</url>
 		</pluginRepository>
-		-->
 	</pluginRepositories>
 
 	<dependencyManagement>

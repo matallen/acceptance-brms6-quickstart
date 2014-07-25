@@ -17,10 +17,10 @@
 		<level value="ERROR" />
 	</logger>
 	<logger name="org.kie">
-		<level value="debug" />
+		<level value="error" />
 	</logger>
 	<logger name="org.drools">
-		<level value="debug" />
+		<level value="error" />
 	</logger>
 	
 	<root>
