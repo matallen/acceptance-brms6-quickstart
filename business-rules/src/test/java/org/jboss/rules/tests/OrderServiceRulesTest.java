@@ -5,17 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
 import org.jboss.rules.RulesTestBase;
-import org.jboss.rules.SysErrAgendaEventListener;
-import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieScanner;
-import org.kie.api.definition.KiePackage;
-import org.kie.api.definition.rule.Rule;
-import org.kie.api.event.rule.AgendaEventListener;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
 
 public class OrderServiceRulesTest extends RulesTestBase{
 
