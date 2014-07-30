@@ -22,7 +22,9 @@ mvn clean install -Pbrms,itest
 	</properties>
 
 	<modules>
+	    <!--
 		<module>acceptance</module>
+	    -->
 		<module>business-rules</module>
 		<module>rule-domain</module>
 		<module>order-service</module>
