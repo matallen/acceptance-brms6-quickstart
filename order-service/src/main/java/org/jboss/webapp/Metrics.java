@@ -1,13 +1,23 @@
 package org.jboss.webapp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Metrics {
-  private static long start;
-  public static void start(){
+  private long start;
+  private Map<String,Long> metrics=new HashMap<String, Long>();
+  
+  public void start(){
     start=System.currentTimeMillis();
   }
-  public static long endReset(){
+  public long end(String name){
     long result=System.currentTimeMillis()-start;
+    metrics.put(name, result);
     start=System.currentTimeMillis();
     return result;
+  }
+  public Long get(String name){
+    if (!metrics.containsKey(name)) return 0l;
+    return metrics.get(name);
   }
 }

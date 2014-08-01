@@ -3,12 +3,13 @@ package org.jboss.acceptance.utils;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
 public class Utils {
-  private static final Logger log=Logger.getLogger(Utils.class);
+  private static final Logger log=LoggerFactory.getLogger(Utils.class);
   
   public static void beforeScenarios(){
     boolean successfulRuleDeployment=Wait.For(30, new ToHappen() {

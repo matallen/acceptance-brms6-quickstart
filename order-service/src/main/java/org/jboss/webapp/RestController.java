@@ -1,6 +1,8 @@
 package org.jboss.webapp;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -10,7 +12,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -33,16 +34,21 @@ import org.kie.api.event.rule.RuleFlowGroupDeactivatedEvent;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.builder.conf.RuleEngineOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/")
-public class RestController extends javax.ws.rs.core.Application{
-  private static final Logger log=Logger.getLogger(RestController.class);
+public class RestController {
+//  private static final Logger log=Logger.getLogger(RestController.class);
+  private static final Logger log = LoggerFactory.getLogger(RestController.class);
+  
   private static KieScanner kScanner=null;
   private static KieContainer kContainer=null;
   
   @GET
   @Path("/version")
   public Response displayVersion() {
+    System.out.println("Version info being requested");
     String result="Version info unknown";
     try {
       result = IOUtils.toString(this.getClass().getResourceAsStream("/META-INF/MANIFEST.MF")).replaceAll("\n", "<br/>");
@@ -50,26 +56,27 @@ public class RestController extends javax.ws.rs.core.Application{
     return Response.status(200).entity(result).build();
   }
   
-  public static void main(String[] asd) throws JsonGenerationException, JsonMappingException, IOException{
+//  public static void main(String[] asd) throws JsonGenerationException, JsonMappingException, IOException{
 //    System.out.println(Json.toJson(new Order("01", Country.GBR, 100, new String[]{})));
 //    System.out.println(Json.toObject("{\"id\":\"01\",\"country\":\"GBP\",\"amount\":100.0,\"items\":[]}", Order.class));
-    
-    System.setProperty("kie.maven.client.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/client-settings.xml");
-    Order order=new Order("1", Country.GBR, 100, new String[]{});
-    System.out.println(new RestController().execute(order).getEntity());
-    
-  }
+//    System.setProperty("kie.maven.client.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/client-settings.xml");
+//    Order order=new Order("1", Country.GBR, 100, new String[]{});
+//    System.out.println(new RestController().execute(order).getEntity());
+//  }
 
   @POST
   @Path("/riskcheck")
   public Response execute(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+    System.out.println("xxxx");
     String payload=IOUtils.toString(request.getInputStream());
     log.info("[/riskcheck] Called with payload "+payload);
-    
+    System.out.println("[/riskcheck] Called with payload \"+payload");
     Order order=(Order)Json.toObject(payload, Order.class);
     
     return execute(order);
   }
+  
+//  private boolean useExternalSettingXml=true;
   
   public Response execute(Order order) {
     try{
@@ -86,21 +93,29 @@ public class RestController extends javax.ws.rs.core.Application{
       }
       
       String originalKieMavenSettingsCustom=System.getProperty("kie.maven.settings.custom");
-      String kieMavenSettingsCustom=System.getProperty("kie.maven.client.settings.custom");
-//    System.setProperty("kie.maven.settings.custom", "/home/mallen/Work/poc/acceptance-brms6-quickstart/acceptance/target/classes/client-settings.xml");
-      System.setProperty("kie.maven.settings.custom", kieMavenSettingsCustom);
+//      if (useExternalSettingXml){
+        String kieMavenSettingsCustom=System.getProperty("kie.maven.client.settings.custom");
+        System.setProperty("kie.maven.settings.custom", kieMavenSettingsCustom);
+        log.debug("using [kie.maven.settings.custom] = "+kieMavenSettingsCustom);
+//      }else{
+//        System.clearProperty("kie.maven.settings.custom");
+//      }
       
-      long initKieServices=0,initKieContainer=0,initKieScanner=0,initKieSession,fireAllRules;
+      Metrics metrics=new Metrics();
       
       if (null==kScanner){
-        Metrics.start();
+        metrics.start();
         KieServices kieServices = KieServices.Factory.get();
-        initKieServices=Metrics.endReset();
+        metrics.end("InitkieServices");
         
         // finds the kjar in the maven repo pointed to by the "-Dkie.maven.settings.custom=settings.xml"
-        log.debug("using [kie.maven.settings.custom] = "+kieMavenSettingsCustom);
-        kContainer = kieServices.newKieContainer(kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", "6.0.0-SNAPSHOT"));
-        initKieContainer=Metrics.endReset();
+//        String version="LATEST"; // doesnt work!
+//        String version="6.0.0-SNAPSHOT";
+//        kContainer=kieServices.newKieContainer(kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", version)); //6.0.0-SNAPSHOT
+        
+        kContainer=kieServices.newKieClasspathContainer(); // uses kie modules from the maven dependencies
+        
+        metrics.end("InitKieContainer");
       }
       
       AgendaEventListener listener=new AgendaEventListener() {
@@ -121,19 +136,18 @@ public class RestController extends javax.ws.rs.core.Application{
       
       KieSession s=null;
       try{
-        Metrics.start();
-        boolean usePhreak=false;
+//        boolean usePhreak=false;
         
-        if (usePhreak){
-          log.debug("Using Phreak");
-          s = kContainer.newKieSession("risk.ksession");
-        }else{
-          log.debug("Using Reteoo");
-          KieBaseConfiguration kconf = org.kie.internal.KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
-          kconf.setOption(RuleEngineOption.RETEOO);
-          s=kContainer.newKieBase("risk.kbase", kconf).newKieSession();
-        }
-        initKieSession=Metrics.endReset();
+//        if (usePhreak){
+//          log.debug("Using Phreak");
+          s = kContainer.newKieSession("defaultKieBase.session");
+//        }else{
+//          log.debug("Using Reteoo");
+//          KieBaseConfiguration kconf = org.kie.internal.KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
+//          kconf.setOption(RuleEngineOption.RETEOO);
+//          s=kContainer.newKieBase("risk.kbase", kconf).newKieSession();
+//        }
+        metrics.end("initKieSession");
         
         if (0==s.getKieBase().getKiePackages().size()) throw new RuntimeException("No Rules in kBase!!!");
         
@@ -149,13 +163,13 @@ public class RestController extends javax.ws.rs.core.Application{
         s.insert(order);
         
         s.fireAllRules();
-        fireAllRules=Metrics.endReset();
+        metrics.end("fireAllRules");
         
-        log.error("Order after rules = "+order);
+        log.debug("Order after rules = "+order);
         
         log.debug("Drools execution metrics:");
-        log.debug(String.format("%-10s | %-10s | %-10s | %-10s | %-10s |", "kServ(ms)","kCont(ms)","kScan(ms)","kSess(ms)","fireRules"));
-        log.debug(String.format("%-10s | %-10s | %-10s | %-10s | %-10s |", initKieServices,initKieContainer,initKieScanner,initKieSession,fireAllRules));
+        log.debug(String.format("%-10s | %-10s | %-10s | %-10s |", "kServ(ms)","kCont(ms)","kSess(ms)","fireRules"));
+        log.debug(String.format("%-10s | %-10s | %-10s | %-10s |", metrics.get("InitkieServices"),metrics.get("InitKieContainer"),metrics.get("initKieSession"),metrics.get("fireAllRules")));
         
         if (null==originalKieMavenSettingsCustom){
           System.clearProperty("kie.maven.settings.custom");

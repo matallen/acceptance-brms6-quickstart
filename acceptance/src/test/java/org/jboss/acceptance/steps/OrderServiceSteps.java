@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.jboss.acceptance.utils.Json;
 import org.jboss.acceptance.utils.Utils;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jayway.restassured.response.Response;
 
@@ -21,7 +22,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class OrderServiceSteps{
-  private static final Logger log=Logger.getLogger(OrderServiceSteps.class);
+  private static final Logger log=LoggerFactory.getLogger(OrderServiceSteps.class);
+  
   private static final String ORDER_SERVICE_URL="http://localhost:16080/order-service";
   private List<Order> orders=new ArrayList<Order>();
   
@@ -78,6 +80,8 @@ public class OrderServiceSteps{
   
   @Then("^the results should be:$")
   public void the_result_should_be(List<Map<String,String>> table) throws Throwable {
+    assertEquals(table.size(), orders.size());
+    int ordersCheckedCount=0;
     for(Map<String,String> row:table){
       String id=row.get("ID");
       String riskRating=row.get("Risk Rating");
@@ -86,10 +90,11 @@ public class OrderServiceSteps{
         if (id.equals(order.getId())){
           assertEquals(riskRating, order.getRisk());
           assertEquals(recommendation, order.getRecommendation());
+          ordersCheckedCount+=1;
         }
       }
     }
-    assertEquals(table.size(), orders.size());
+    assertEquals(table.size(), ordersCheckedCount);
   }
   
 }

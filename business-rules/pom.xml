@@ -10,7 +10,21 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<groupId>org.jboss.quickstarts.brms6</groupId>
 	<artifactId>business-rules</artifactId>
 	<packaging>kjar</packaging>
-
+	<!-- 
+    <repositories>
+        <repository>
+            <id>client-remote</id>
+            <name>Client Remote</name>
+            <url>http://localhost:16080/business-central/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+	 -->
 	<build>
 		<plugins>
 			<!-- maven2+ -->
@@ -23,41 +37,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 				<version>6.0.1.Final</version>
 				<version>${kie-maven-plugin.version}</version>
 				<version>6.2.0-SNAPSHOT</version>
-				<version>${brms.version}</version>
-				-->
                 <version>6.0.3-redhat-4</version>
+				-->
+				<version>${brms.version}</version>
 				<extensions>true</extensions>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.kie</groupId>
-										<artifactId>kie-maven-plugin</artifactId>
-										<versionRange>[6.0.3-redhat-4,)</versionRange>
-										<goals>
-											<goal>build</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+
 	</build>
 	<dependencies>
 		<dependency>
@@ -67,6 +53,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		</dependency>
 		
 		<!-- logging -->
+		<!-- 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -81,17 +68,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
+		 -->
 		
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>net.java.quickcheck</groupId>
-			<artifactId>quickcheck</artifactId>
-			<version>0.6</version>
-			<scope>test</scope>
-		</dependency>
+
 
 		<!-- brms dependencies -->
 		<dependency>
@@ -154,11 +137,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<artifactId>poi-ooxml</artifactId>
 		</dependency>
 		
-		<!-- TODO: use the version from the distro (tmp/jboss-bpms-engine/lib/protobuf-java-2.5.0.jar)-->
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>2.5.0</version>
 		</dependency>
 		
 		<dependency>
@@ -166,15 +147,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<artifactId>antlr-runtime</artifactId>
 		</dependency>
 		
-		<!-- TODO: why is this not inheriting from parent? -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- to force module build order only -->
 		<dependency>
 			<groupId>org.jboss.quickstarts.brms6</groupId>
 			<artifactId>rule-domain</artifactId>
