@@ -296,6 +296,16 @@
 								</configuration>
 							</execution>
 						</executions>
+						<dependencies>
+						<!--  TODO: seem to be getting this error on Jeknins sometimes, so i added this to try to solve it
+						A required class was missing while executing org.jboss.kie.maven:maven-kie-deployer-plugin:1.0.0:deploy: org/apache/http/HttpException
+						 -->
+					        <dependency>
+					            <groupId>org.apache.httpcomponents</groupId>
+					            <artifactId>httpclient</artifactId>
+					            <version>4.2.5</version>
+					        </dependency>
+						</dependencies>
 					</plugin>
 				</plugins>
 			</build>
