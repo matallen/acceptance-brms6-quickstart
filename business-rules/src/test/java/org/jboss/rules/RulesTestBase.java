@@ -55,7 +55,15 @@ public class RulesTestBase {
     Assert.assertEquals( 0, builder.getResults().getMessages( Message.Level.ERROR ).size() );
     System.out.println(builder.getResults());
 	}
-
+	
+	/**
+	 * Loads the "defaultKieBase.session" kieSession
+	 * @return
+	 */
+	public KieSession loadKieSession() {
+	  return loadKieSession("defaultKieBase.session");
+	}
+	
   public KieSession loadKieSession(String kSessionId) {
     session=KieServices.Factory.get().getKieClasspathContainer().newKieSession(kSessionId);
 

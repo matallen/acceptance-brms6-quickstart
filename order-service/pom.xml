@@ -9,9 +9,37 @@
 	<groupId>org.jboss.quickstarts.brms6</groupId>
 	<artifactId>order-service</artifactId>
 	<packaging>war</packaging>
-
-<!--
-    -->
+    
+    <properties>
+        <build.number>SNAPSHOT</build.number>
+    </properties>
+    
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<manifest>
+						<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+					</manifest>
+					<archive>
+						<manifestEntries>
+						      <Version>${project.version}</Version>
+						      <Jenkins-build>${build.number}</Jenkins-build>
+						      <Jenkins-id>${build.id}</Jenkins-id>
+						      <!-- 
+							<Specification-Title>${project.name}</Specification-Title>
+							<Specification-Version>${project.version}</Specification-Version>
+							<Implementation-Version>${build.number}</Implementation-Version>
+						       -->
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+    
 	<dependencies>
 		<dependency>
 			<groupId>org.kie</groupId>

@@ -8,10 +8,16 @@ import org.jboss.rules.RulesTestBase;
 import org.junit.Test;
 
 public class OrderServiceRulesTest extends RulesTestBase{
-
+  /**
+   * Good Practices - unit tests...
+   * 1) should be self-contained
+   * 2) should re-initialise variables so one test doesn't not affect another
+   * 
+   */
+  
   @Test
   public void test_lowRisk() {
-    loadKieSession("defaultKieBase.session");
+    loadKieSession();
     
     Order order=new Order("1", Country.GBR, 50, new String[]{});
     int rules=fireAllRules(order);
@@ -23,7 +29,7 @@ public class OrderServiceRulesTest extends RulesTestBase{
   
   @Test
   public void test_highRiskG8() {
-    loadKieSession("defaultKieBase.session");
+    loadKieSession();
     
     Order order=new Order("1", Country.GBR, 200, new String[]{});
     int rules=fireAllRules(order);
@@ -35,7 +41,7 @@ public class OrderServiceRulesTest extends RulesTestBase{
   
   @Test
   public void test_highRiskHighValue() {
-    loadKieSession("defaultKieBase.session");
+    loadKieSession();
     
     Order order=new Order("1", Country.AFG, 200, new String[]{});
     int rules=fireAllRules(order);
