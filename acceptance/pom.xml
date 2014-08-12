@@ -153,7 +153,6 @@
 										<groupId>org.slf4j</groupId>
 										<artifactId>slf4j-api</artifactId>
 									</dependency>
-									<!--
 									<dependency>
 										<groupId>org.slf4j</groupId>
 										<artifactId>slf4j-log4j12</artifactId>
@@ -162,6 +161,7 @@
 										<groupId>log4j</groupId>
 										<artifactId>log4j</artifactId>
 									</dependency>
+									<!--
 									-->
 									<!-- for deployment on Tomcat7 -->
 									<dependency>
@@ -360,15 +360,6 @@
 	</profiles>
 
 	<dependencies>
-		<!--
-		<dependency>
-			<groupId>org.sonatype.nexus</groupId>
-			<artifactId>nexus-webapp</artifactId>
-			<version>2.8.1-01</version>
-			<type>war</type>
-		</dependency>
-		-->
-
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-drools-wb-distribution-wars</artifactId>
@@ -430,25 +421,6 @@
 		</dependency>
 		<!-- /required for deploying on Tomcat7 -->
 		
-		<!-- 
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-drools-wb-distribution-wars</artifactId>
-			<classifier>tomcat7.0</classifier>
-			<type>war</type>
-			<version>6.1.0.CR1</version>
-		</dependency>
-		 -->
-
-		<!-- 
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-drools-wb-webapp</artifactId>
-			<version>6.1.0.CR1</version>
-			<type>war</type>
-		</dependency>
-		 -->
-
 		<!-- cucumber bdd framework -->
         <dependency>
             <groupId>info.cukes</groupId>
