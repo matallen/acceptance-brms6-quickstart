@@ -24,7 +24,7 @@ import cucumber.api.java.en.When;
 public class OrderServiceSteps{
   private static final Logger log=LoggerFactory.getLogger(OrderServiceSteps.class);
   
-  private static final String ORDER_SERVICE_URL="http://127.0.0.1:16080/order-service";
+  private static final String ORDER_SERVICE_URL="http://localhost:16080/order-service";
   private List<Order> orders=new ArrayList<Order>();
   
   // this doesnt work cos the cucumber api annotation causes an indexOutOfBoundsError - upgrade cukes?
