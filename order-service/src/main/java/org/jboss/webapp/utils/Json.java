@@ -1,4 +1,4 @@
-package org.jboss.webapp;
+package org.jboss.webapp.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

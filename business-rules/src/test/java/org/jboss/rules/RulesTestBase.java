@@ -32,8 +32,6 @@ public class RulesTestBase {
 	public String getRuleDirectory(){ return ruleDirectoryDefault; }
 	
 	private void compileFromDisk(String basePath, String packageNames) throws IOException{
-//    File packageFile=new File(basePath, packageId.replaceAll("\\.", File.separator)+File.separator+version);
-    
 	  for (String packageId:packageNames.split(",")){
 	    File packageFile=new File(basePath, packageId.replaceAll("\\.", File.separator));
       if (!packageFile.exists()) throw new RuntimeException("unable to find the directory containing the rules to compile ["+packageFile.getAbsolutePath()+"]");
@@ -64,6 +62,10 @@ public class RulesTestBase {
 	  return loadKieSession("defaultKieBase.session");
 	}
 	
+  /**
+   * Loads the specified @param kSessionId kieSession
+   * @return
+   */
   public KieSession loadKieSession(String kSessionId) {
     session=KieServices.Factory.get().getKieClasspathContainer().newKieSession(kSessionId);
 

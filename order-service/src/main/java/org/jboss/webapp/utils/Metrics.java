@@ -1,4 +1,4 @@
-package org.jboss.webapp;
+package org.jboss.webapp.utils;
 
 import java.util.HashMap;
 import java.util.Map;

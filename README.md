@@ -48,3 +48,16 @@ in the cargo plugin config, add a <deployable> entry for your webapps maven GAV 
 ### Notes
 
 ** port 16080 was chosed for the web port because OpenShift will only allow ports between 15000-35530 to be bound 
+
+
+**Things to add to this document**
+* Emphasise that acceptance testing is a software contract test of _your_ software, not the systems it will integrate with
+* acceptance tests should contain _domain language_, not technical terms. ie. do NOT use "should get http 200 from url X" 
+* rule-domain should be interfaces that drools rules use to keep the rule-domain jar small (important for brms5s JCR repository). Any other domain jar should depend on rule-domain and contain concrete implementations.  Drools also performs quicker against interfaces with just its fields because of the mvel introspection language.
+* acceptance test manages the tests so testing doesnt polute the applications
+* acceptance forces the business-central instance to have a "target/repo" repository so BC doesnt pick up artifacts from the build but only the ones actually deployed.
+* quickstart in general promotes that kjars should be separate (not embedded) in the applications so they are pulled in at runtime and can be changes by the business on the fly.
+
+
+
+
