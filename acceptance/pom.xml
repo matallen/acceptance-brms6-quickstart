@@ -162,8 +162,6 @@
 										<groupId>log4j</groupId>
 										<artifactId>log4j</artifactId>
 									</dependency>
-								    -->
-									<!--
 									-->
 									<!-- for deployment on Tomcat7 -->
 									<dependency>
@@ -276,7 +274,7 @@
 									<serverUri>http://localhost:16080/business-central</serverUri>
 									<username>admin</username>
 									<password>admin</password>
-									<timeoutInSeconds>360</timeoutInSeconds>
+									<timeoutInSeconds>3600</timeoutInSeconds>
 									<deployables>
 										<deployable>
 											<groupId>org.jboss.quickstarts.brms6</groupId>
