@@ -269,9 +269,9 @@
 						</configuration>
 					</plugin>
 					<plugin>
-						<groupId>org.jboss.kie.maven</groupId>
+						<groupId>org.kie.maven.plugins</groupId>
 						<artifactId>maven-kie-deployer-plugin</artifactId>
-						<version>1.0.0</version>
+						<version>1.0.1</version>
 						<executions>
 							<execution>
 								<id>deploy-kie-modules</id>
