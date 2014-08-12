@@ -284,7 +284,7 @@
 									<serverUri>http://localhost:16080/business-central</serverUri>
 									<username>admin</username>
 									<password>admin</password>
-									<timeoutInSeconds>180</timeoutInSeconds>
+									<timeoutInSeconds>360</timeoutInSeconds>
 									<deployables>
 										<deployable>
 											<groupId>org.jboss.quickstarts.brms6</groupId>
