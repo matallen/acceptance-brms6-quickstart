@@ -153,6 +153,7 @@
 										<groupId>org.slf4j</groupId>
 										<artifactId>slf4j-api</artifactId>
 									</dependency>
+								    <!--
 									<dependency>
 										<groupId>org.slf4j</groupId>
 										<artifactId>slf4j-log4j12</artifactId>
@@ -161,6 +162,7 @@
 										<groupId>log4j</groupId>
 										<artifactId>log4j</artifactId>
 									</dependency>
+								    -->
 									<!--
 									-->
 									<!-- for deployment on Tomcat7 -->
@@ -254,16 +256,6 @@
 											<context>order-service</context>
 										</properties>
 									</deployable>
-									<!--
-									<deployable>
-										<groupId>org.sonatype.nexus</groupId>
-										<artifactId>nexus-webapp</artifactId>
-										<type>war</type>
-										<properties>
-											<context>nexus</context>
-										</properties>
-									</deployable>
-									-->
 								</deployables>
 							</configuration>
 						</configuration>
@@ -454,7 +446,7 @@
             <version>4.2.5</version>
         </dependency>
         
-        
+        <!--
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -465,6 +457,7 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.2</version>
         </dependency>
+        -->
                                     
 	</dependencies>
 </project>
