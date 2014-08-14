@@ -11,8 +11,8 @@ import cucumber.api.junit.Cucumber;
 //@Cucumber.Options(features={"src/test/resources/cucumber"}, glue={"cucumber.com.zzz.yyy.steps"}, format={"html:target/test-reports"}, )
 
 @CucumberOptions(
-    monochrome = true, 
-    format = {"pretty", "html:target/cucumber", "json:target/cucumber-report.json"}//, "rerun:target/rerun.txt"}
+    monochrome = false, 
+    format = {"pretty", "html:target/cucumber", "json:target/cucumber.json"}//, "rerun:target/rerun.txt"}
     )
 public class RunCucumberTests {
   @Test

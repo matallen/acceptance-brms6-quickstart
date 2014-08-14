@@ -358,7 +358,7 @@
 								<configuration>
 									<projectName>${project.artifactId}</projectName>
 									<outputDirectory>${project.build.directory}/cucumber-html-reports</outputDirectory>
-									<cucumberOutput>${project.build.directory}/cucumber2.json</cucumberOutput>
+									<cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>
 									<enableFlashCharts>false</enableFlashCharts>
 								</configuration>
 							</execution>
