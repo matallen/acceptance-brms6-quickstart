@@ -12,10 +12,11 @@ import cucumber.api.junit.Cucumber;
 
 @CucumberOptions(
     monochrome = false, 
-    format = {"pretty", "html:target/cucumber", "json:target/cucumber.json"}//, "rerun:target/rerun.txt"}
+    format = {"pretty", /*"html:target/cucumber",*/ "json:target/cucumber.json"}//, "rerun:target/rerun.txt"}
     )
 public class RunCucumberTests {
   @Test
   public void runAcceptanceTests(){}
   
 }
+
