@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-<!--
-
-mvn clean install -Pbrms,itest
-
--->
 	<groupId>org.jboss.quickstarts</groupId>
 	<artifactId>brms6</artifactId>
 	<version>6.0.0-SNAPSHOT</version>
@@ -28,7 +23,6 @@ mvn clean install -Pbrms,itest
 			<id>brms-6.0.2.GA</id>
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
-				<!--brms.version>6.0.2.BRMS</brms.version-->
 				<brms.version>6.0.3-redhat-4</brms.version>
 				<!--
 				<kie-maven-plugin.version>6.1.0.CR2</kie-maven-plugin.version> <!- because 6.0.3-redhat-4 has bug - https://issues.jboss.org/browse/DROOLS-373 / https://bugzilla.redhat.com/show_bug.cgi?id=1039676 ->
@@ -71,7 +65,6 @@ mvn clean install -Pbrms,itest
 						<artifactId>mvel2</artifactId>
 						<version>2.1.9.Final-redhat-9</version>
 					</dependency>
-                    <!-- TODO: use the version from the distro (tmp/jboss-bpms-engine/lib/protobuf-java-2.5.0.jar)-->
 					<dependency>
 			            <groupId>com.google.protobuf</groupId>
 			            <artifactId>protobuf-java</artifactId>
@@ -83,12 +76,6 @@ mvn clean install -Pbrms,itest
 	</profiles>
 
 	<repositories>
-		<!--
-		<repository>
-			<id>jboss-nexus</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
-		</repository>
-		-->
 		<repository>
 			<id>jboss-techpreview</id>
 			<url>http://maven.repository.redhat.com/techpreview/all</url>
@@ -101,12 +88,6 @@ mvn clean install -Pbrms,itest
 			<name>Plugins Repository</name>
 			<url>http://repo1.maven.org/maven2</url>
 		</pluginRepository>
-		<!--
-		<pluginRepository>
-			<id>jboss-nexus</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
-		</pluginRepository>
-		-->
 		<pluginRepository>
 			<id>jboss-techpreview</id>
 			<url>http://maven.repository.redhat.com/techpreview/all</url>
@@ -115,7 +96,6 @@ mvn clean install -Pbrms,itest
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- useful stuff -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -126,11 +106,6 @@ mvn clean install -Pbrms,itest
 				<artifactId>commons-lang</artifactId>
 				<version>2.6</version>
 			</dependency>
-			<!--dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.16</version>
-			</dependency-->
 	        <dependency>
 	            <groupId>org.slf4j</groupId>
 	            <artifactId>slf4j-api</artifactId>
@@ -155,7 +130,6 @@ mvn clean install -Pbrms,itest
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -209,45 +183,40 @@ mvn clean install -Pbrms,itest
 								<requireJavaVersion>
 									<version>1.6</version>
 								</requireJavaVersion>
-								<!--
-								<requireOS>
-									<family>unix</family>
-								</requireOS>
-								-->
 							</rules>
 						</configuration>
 					</execution>
 				</executions>
-			      </plugin>
+			</plugin>
 		</plugins>
-            <pluginManagement>
-				<plugins>
-					<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-					<plugin>
-						<groupId>org.eclipse.m2e</groupId>
-						<artifactId>lifecycle-mapping</artifactId>
-						<version>1.0.0</version>
-						<configuration>
-							<lifecycleMappingMetadata>
-								<pluginExecutions>
-									<pluginExecution>
-										<pluginExecutionFilter>
-											<groupId>org.kie</groupId>
-											<artifactId>kie-maven-plugin</artifactId>
-											<versionRange>[6.0.3-redhat-4,)</versionRange>
-											<goals>
-												<goal>build</goal>
-											</goals>
-										</pluginExecutionFilter>
-										<action>
-											<ignore></ignore>
-										</action>
-									</pluginExecution>
-								</pluginExecutions>
-							</lifecycleMappingMetadata>
-						</configuration>
-					</plugin>
-				</plugins>
-			</pluginManagement>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.kie</groupId>
+										<artifactId>kie-maven-plugin</artifactId>
+										<versionRange>[6.0.3-redhat-4,)</versionRange>
+										<goals>
+											<goal>build</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>

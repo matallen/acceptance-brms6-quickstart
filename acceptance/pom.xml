@@ -113,6 +113,10 @@
 								<log>${project.build.directory}/logs/cargo-plugin.log</log>
 								<timeout>120000</timeout>
 								<systemProperties>
+								    <target.server>http://localhost:16080</target.server>
+									<bpms.username>admin</bpms.username>
+									<bpms.password>admin</bpms.password>
+									<bpms.url>${target.server}/business-central</bpms.url>
 								<!-- 
 									<org.kie.demo>false</org.kie.demo>
 								 -->
@@ -137,15 +141,6 @@
 									<bitronix.tm.configuration>${project.build.directory}/cargo/configurations/tomcat7x/conf/btm-config.properties</bitronix.tm.configuration>
 									<jbpm.tsr.jndi.lookup>=java:comp/env/TransactionSynchronizationRegistry</jbpm.tsr.jndi.lookup>
 									<!-- /for deployment on Tomcat7 -->
-									<!--
-									<dummy-order-service>true</dummy-order-service>
-									-->
-									
-									<!--
-									<bpms.username>admin</bpms.username>
-									<bpms.password>admin</bpms.password>
-									<bpms.base.url>http://localhost:8080/business-central</bpms.base.url>
-									-->
 								</systemProperties>
 								<!-- these end up in <tomcat_home>/common/lib -->
 								<dependencies>
@@ -261,7 +256,7 @@
 					<plugin>
 						<groupId>org.kie.maven.plugins</groupId>
 						<artifactId>maven-kie-deployer-plugin</artifactId>
-						<version>1.0.1</version>
+						<version>1.0.3-SNAPSHOT</version>
 						<executions>
 							<execution>
 								<id>deploy-kie-modules</id>
@@ -270,7 +265,7 @@
 									<goal>deploy</goal>
 								</goals>
 								<configuration>
-									<debug>true</debug>
+									<debug>false</debug>
 									<serverUri>http://localhost:16080/business-central</serverUri>
 									<username>admin</username>
 									<password>admin</password>
@@ -344,6 +339,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!--
 					<plugin>
 						<groupId>net.masterthought</groupId>
 						<artifactId>maven-cucumber-reporting</artifactId>
@@ -357,13 +353,14 @@
 								</goals>
 								<configuration>
 									<projectName>${project.artifactId}</projectName>
-									<outputDirectory>${project.build.directory}/../../../cucumber-html-reports</outputDirectory>
+									<outputDirectory>${project.build.directory}/../../cucumber-html-reports</outputDirectory>
 									<cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>
 									<enableFlashCharts>false</enableFlashCharts>
 								</configuration>
 							</execution>
 						</executions>
 					</plugin>
+                    -->
                 </plugins>
             </build>
         </profile>

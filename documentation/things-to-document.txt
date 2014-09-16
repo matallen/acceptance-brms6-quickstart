@@ -44,6 +44,24 @@ How to link github commit hooks with an openshift jenkins instance
 
 
 
+Jenkins setup:
 
+Acceptance job:
+  mvn clean install -DskipTests
+  cd acceptance
+  mvn clean install -Pbrms,itest
+
+
+
+KPIs??
+
+
+Delivery Questionnaire?
+1) Customer name + region
+2) Delivering consultants
+3) How long did it take to deliver in man days?
+4) Did it meet the customers needs?
+5) If no, what tweaks were required?
+6) would you/customer be willing to contribute the tweaks?
 
 

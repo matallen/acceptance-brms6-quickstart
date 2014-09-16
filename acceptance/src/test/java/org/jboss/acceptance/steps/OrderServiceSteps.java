@@ -23,15 +23,14 @@ import cucumber.api.java.en.When;
 
 public class OrderServiceSteps{
   private static final Logger log=LoggerFactory.getLogger(OrderServiceSteps.class);
-  
+//  private static final String ORDER_SERVICE_URL=System.getProperty("target.server")+"/order-service";
   private static final String ORDER_SERVICE_URL="http://localhost:16080/order-service";
   private List<Order> orders=new ArrayList<Order>();
   
-  // this doesnt work cos the cucumber api annotation causes an indexOutOfBoundsError - upgrade cukes?
-  private static boolean dunit = false;
+  private static boolean initialised = false;
   @Before
   public void beforeAll(){
-    if(!dunit) {
+    if(!initialised) {
       Runtime.getRuntime().addShutdownHook(new Thread() {
         public void run() {
           log.debug("@AfterAll");
@@ -39,7 +38,7 @@ public class OrderServiceSteps{
       });
       log.debug("@BeforeAll");
       Utils.beforeScenarios();
-      dunit = true;
+      initialised = true;
     }
   }
   

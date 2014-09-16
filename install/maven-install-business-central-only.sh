@@ -6,7 +6,7 @@ URL="file:///home/$USER/.m2/repository"
 DISTRO=$1
 if [ "x$DISTRO" == "x" ]; then
   echo "Please pass distro zip as a parameter, ie:"
-  echo "  maven-install-drools6.sh jboss-bpms-6.0.2.GA-redhat-5-deployable-generic.zip"
+  echo "  maven-install-business-central-only.sh jboss-bpms-6.0.2.GA-redhat-5-deployable-generic.zip"
   exit
 fi
 
@@ -31,8 +31,4 @@ find tmp -name "business-central.war" -exec sh -c 'cd {}; zip -r ../../business-
 
 # business-central webapp
 mvn deploy:deploy-file -Dfile=tmp/business-central.war -DgroupId=org.kie -DartifactId=kie-drools-wb-distribution-wars -Dclassifier=tomcat7.0 -Dversion=$internalVersion -Dpackaging=war -DgeneratePom=true -DcreateChecksum=true -Durl=$URL
-
-
-
-#mvn deploy:deploy-file -Dfile=tmp/business-central.war -DgroupId=org.drools -DartifactId=business-central -Dversion=$internalVersion -Dpackaging=war -DgeneratePom=true -DcreateChecksum=true -Durl=$URL
 
