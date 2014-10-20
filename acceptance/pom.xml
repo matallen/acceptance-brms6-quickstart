@@ -256,7 +256,7 @@
 					<plugin>
 						<groupId>org.kie.maven.plugins</groupId>
 						<artifactId>maven-kie-deployer-plugin</artifactId>
-						<version>1.0.3-SNAPSHOT</version>
+						<version>1.0.2</version>
 						<executions>
 							<execution>
 								<id>deploy-kie-modules</id>
