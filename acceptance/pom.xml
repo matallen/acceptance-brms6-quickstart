@@ -321,7 +321,7 @@
                             <parallel>none</parallel>
                             <threadCount>1</threadCount>
                             <includes>
-                                <include>**/*RunCucumberTests.java</include>
+                                <include>**/*RunCucumber*Test*.java</include>
                             </includes>
                         </configuration>
                         <executions>

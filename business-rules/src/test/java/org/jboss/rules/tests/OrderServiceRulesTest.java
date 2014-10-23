@@ -18,9 +18,9 @@
 package org.jboss.rules.tests;
 
 import static org.junit.Assert.assertEquals;
-
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
+import org.jboss.order.domain.OrderBuilder;
 import org.jboss.rules.RulesTestBase;
 import org.junit.Test;
 
@@ -33,38 +33,48 @@ public class OrderServiceRulesTest extends RulesTestBase{
    */
   
   @Test
-  public void test_lowRisk() {
+  public void test_G3LowValue_shouldAccept() {
+//    compileAndLoadKieSession("order.rules");
     loadKieSession();
     
-    Order order=new Order("1", Country.GBR, 50, new String[]{});
+    Order order=new OrderBuilder().id("1")
+      .country(Country.GBR)
+      .amount(50.00)
+      .build();
     int rules=fireAllRules(order);
     
     assertEquals("LOW", order.getRisk());
     assertEquals("ACCEPT", order.getRecommendation());
-    assertEquals(2, rules);
-  }
-  
-  @Test
-  public void test_highRiskG8() {
-    loadKieSession();
-    
-    Order order=new Order("1", Country.GBR, 200, new String[]{});
-    int rules=fireAllRules(order);
-    
-    assertEquals("HIGH", order.getRisk());
-    assertEquals("REJECT", order.getRecommendation());
     assertEquals(1, rules);
   }
   
   @Test
-  public void test_highRiskHighValue() {
+  public void test_G3HighValue_shouldReject() {
     loadKieSession();
     
-    Order order=new Order("1", Country.AFG, 200, new String[]{});
+    Order order=new OrderBuilder().id("1")
+      .country(Country.GBR)
+      .amount(200.00)
+      .build();
     int rules=fireAllRules(order);
     
     assertEquals("HIGH", order.getRisk());
     assertEquals("REJECT", order.getRecommendation());
-    assertEquals(2, rules);
+    assertEquals(0, rules);
+  }
+  
+  @Test
+  public void test_nonG3_shouldReject() {
+    loadKieSession();
+    
+    Order order=new OrderBuilder().id("1")
+      .country(Country.AFG)
+      .amount(10.00)
+      .build();
+    int rules=fireAllRules(order);
+    
+    assertEquals("HIGH", order.getRisk());
+    assertEquals("REJECT", order.getRecommendation());
+    assertEquals(0, rules);
   }
 }

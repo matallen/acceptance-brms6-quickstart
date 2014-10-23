@@ -3,10 +3,13 @@ package org.jboss.acceptance.steps;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.jboss.acceptance.utils.Json;
 import org.jboss.acceptance.utils.Utils;
 import org.jboss.order.domain.Country;
@@ -28,20 +31,10 @@ public class OrderServiceSteps{
   private List<Order> orders=new ArrayList<Order>();
   
   private static boolean initialised = false;
-  @Before
-  public void beforeAll(){
-    if(!initialised) {
-      Runtime.getRuntime().addShutdownHook(new Thread() {
-        public void run() {
-          log.debug("@AfterAll");
-        }
-      });
-      log.debug("@BeforeAll");
-      Utils.beforeScenarios();
-      initialised = true;
-    }
+  @Before public void beforeAll(){
+    if(!initialised) initialised=Utils.beforeScenarios();
   }
-  
+
   @Given("^the order service is deployed$")
   public void the_order_service_is_deployed() throws Throwable {
     assertEquals(200, given().when().get(ORDER_SERVICE_URL+"/version").getStatusCode());
@@ -61,34 +54,34 @@ public class OrderServiceSteps{
 
   @When("^the order is submitted$")
   public void the_order_is_submitted() throws Throwable {
-    for(Order order:orders){
-      String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
-      Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
-      String responseString=response.asString();
-      if (response.getStatusCode()!=200)
-        throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
-      
-      log.debug("riskcheck response was ["+responseString+"]");
-      assertEquals(200, response.getStatusCode());
-      
-      Order responseOrder=Json.toObject(responseString, Order.class);
-      order.setRisk(responseOrder.getRisk());
-      order.setRecommendation(responseOrder.getRecommendation());
-    }
+    for(Order order:orders)
+      sendOrder(order);
   }
   
-  @Then("^the results should be:$")
+  public void sendOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
+    String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
+    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
+    String responseString=response.asString();
+    if (response.getStatusCode()!=200)
+      throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
+    
+//    log.debug("riskcheck response was ["+responseString+"]");
+    assertEquals(200, response.getStatusCode());
+    
+    Order responseOrder=Json.toObject(responseString, Order.class);
+    order.setRisk(responseOrder.getRisk());
+    order.setRecommendation(responseOrder.getRecommendation());
+  }
+  
+  @Then("^the responses should be:$")
   public void the_result_should_be(List<Map<String,String>> table) throws Throwable {
     assertEquals(table.size(), orders.size());
     int ordersCheckedCount=0;
     for(Map<String,String> row:table){
-      String id=row.get("ID");
-      String riskRating=row.get("Risk Rating");
-      String recommendation=row.get("Recommendation");
       for(Order order:orders){
-        if (id.equals(order.getId())){
-          assertEquals(riskRating, order.getRisk());
-          assertEquals(recommendation, order.getRecommendation());
+        if (row.get("ID").equals(order.getId())){
+          assertEquals(row.get("Risk Rating"), order.getRisk());
+          assertEquals(row.get("Recommendation"), order.getRecommendation());
           ordersCheckedCount+=1;
         }
       }

@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Assert;
+import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -45,7 +46,8 @@ public class RulesTestBase {
           System.out.println(drl);
 //          kfs.write("src/main/resources/test.drl",kieServices.getResources().newInputStreamResource(new ByteArrayInputStream(drl.getBytes())).setResourceType(ResourceType.DRL));
         }
-        kfs.write("src/main/resources/"+packageId+"/"+file.getName()+".drl",kieServices.getResources().newInputStreamResource(new ByteArrayInputStream(drl.getBytes())).setResourceType(ResourceType.DRL));
+        if (null!=drl)
+          kfs.write("src/main/resources/"+packageId+"/"+file.getName()+".drl",kieServices.getResources().newInputStreamResource(new ByteArrayInputStream(drl.getBytes())).setResourceType(ResourceType.DRL));
       }
 	  }
     KieBuilder builder=kieServices.newKieBuilder(kfs);
@@ -68,16 +70,18 @@ public class RulesTestBase {
    */
   public KieSession loadKieSession(String kSessionId) {
     session=KieServices.Factory.get().getKieClasspathContainer().newKieSession(kSessionId);
-
-    if (0==session.getKieBase().getKiePackages().size()) throw new RuntimeException("No rules in kBase!!!");
-
-    System.out.println("Rules:");
-    for (KiePackage kp : session.getKieBase().getKiePackages()) {
+    debugKieBase(session.getKieBase());
+    return session;
+  }
+  
+  private void debugKieBase(KieBase kBase){
+    if (0==kBase.getKiePackages().size()) throw new RuntimeException("No rules in kBase!!!");
+    System.out.println("\nRules:");
+    for (KiePackage kp : kBase.getKiePackages()) {
       for (Rule r : kp.getRules()) {
         System.out.println(r.getName());
       }
     }
-    return session;
   }
 
 	public KieSession compileAndLoadKieSession(String packageNames) {
@@ -87,7 +91,8 @@ public class RulesTestBase {
 			
 	    KieContainer kieContainer=kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
 	    this.session=kieContainer.newKieSession();
-		    		
+	    debugKieBase(session.getKieBase());
+		  
 			return session;
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to compile rules - more details in cause:", e);

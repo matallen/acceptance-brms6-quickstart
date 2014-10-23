@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 public class Utils {
   private static final Logger log=LoggerFactory.getLogger(Utils.class);
   
-  public static void beforeScenarios(){
+  public static boolean beforeScenarios(){
     boolean successfulRuleDeployment=Wait.For(180, new ToHappen() {
       @Override
       public boolean hasHappened() {
@@ -29,5 +29,6 @@ public class Utils {
       }
     }, "Unable to find deployed rules");
     assertEquals("Rules were not deployed", true, successfulRuleDeployment);
+    return true;
   }
 }

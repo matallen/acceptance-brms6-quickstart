@@ -1,5 +1,5 @@
 package org.jboss.order.domain;
 
 public enum Country {
-GBR,USA,AFG;
+GBR,FRA,DEU,USA,AFG;
 }

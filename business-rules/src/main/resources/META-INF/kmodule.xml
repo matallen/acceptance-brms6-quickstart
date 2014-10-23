@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
 	
-	<kbase name="defaultKieBase" packages="order.def,order.rules">
+	<kbase name="defaultKieBase" packages="order.rules">
 		<ksession name="defaultKieBase.session" type="stateful"/>
 	</kbase>
 	

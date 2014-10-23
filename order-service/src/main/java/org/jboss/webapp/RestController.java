@@ -29,7 +29,7 @@ public class RestController {
     Order order=(Order)Json.toObject(payload, Order.class);
     
     try{
-      // best practice - set defaults outside of rules if possible. Don't write rules that you know will operate on all facts - it will be slower to execute than pure java.
+      // best practice - initialise default values outside of rules if possible. Don't write rules that you know will operate on all facts - it will be slower to execute than pure java.
       order.setRisk("HIGH");
       order.setRecommendation("REJECT");
       
