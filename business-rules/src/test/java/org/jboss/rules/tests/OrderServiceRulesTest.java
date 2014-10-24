@@ -45,11 +45,11 @@ public class OrderServiceRulesTest extends RulesTestBase{
     
     assertEquals("LOW", order.getRisk());
     assertEquals("ACCEPT", order.getRecommendation());
-    assertEquals(1, rules);
+    assertEquals(2, rules);
   }
   
   @Test
-  public void test_G3HighValue_shouldReject() {
+  public void test_G3MediumValue_shouldRefer() {
     loadKieSession();
     
     Order order=new OrderBuilder().id("1")
@@ -58,9 +58,25 @@ public class OrderServiceRulesTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
+    assertEquals("MEDIUM", order.getRisk());
+    assertEquals("REFER", order.getRecommendation());
+    assertEquals(1, rules);
+  }
+  
+
+  @Test
+  public void test_G3HighValue_shouldReject() {
+    loadKieSession();
+    
+    Order order=new OrderBuilder().id("1")
+      .country(Country.GBR)
+      .amount(1200.00)
+      .build();
+    int rules=fireAllRules(order);
+    
     assertEquals("HIGH", order.getRisk());
     assertEquals("REJECT", order.getRecommendation());
-    assertEquals(0, rules);
+    assertEquals(2, rules);
   }
   
   @Test
@@ -75,6 +91,6 @@ public class OrderServiceRulesTest extends RulesTestBase{
     
     assertEquals("HIGH", order.getRisk());
     assertEquals("REJECT", order.getRecommendation());
-    assertEquals(0, rules);
+    assertEquals(1, rules);
   }
 }
