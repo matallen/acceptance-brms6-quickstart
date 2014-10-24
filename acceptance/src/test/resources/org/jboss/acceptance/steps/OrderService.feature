@@ -19,7 +19,7 @@ And an order exists with the following details:
 When the order is submitted
 Then the responses should be:
 |ID |Risk Rating | Recommendation |
-|02 |HIGH        | REJECT         |
+|02 |MEDIUM      | REFER          |
 
 
 #Scenario: 03 - order service refers medium risk orders
