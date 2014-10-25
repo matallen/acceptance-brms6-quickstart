@@ -77,6 +77,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <artifactId>xstream</artifactId>
             <version>1.4.7</version>
         </dependency>
+        <!-- NEW -->
+        <dependency>
+            <groupId>org.jbpm</groupId>
+            <artifactId>jbpm-bpmn2</artifactId>
+            <version>6.0.3-redhat-4</version>
+        </dependency>
+        <!-- 
+        <dependency>
+            <groupId>org.jbpm</groupId>
+            <artifactId>jbpm-flow</artifactId>
+            <version>6.0.3-redhat-4</version>
+        </dependency>
+         -->
+        <!-- /NEW -->
         
         <!-- for drools compilation -->
         <dependency>

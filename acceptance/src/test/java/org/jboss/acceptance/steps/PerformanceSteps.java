@@ -39,7 +39,7 @@ public class PerformanceSteps{
         this.order=order;
     }
     @Override public String call() throws Exception {
-        new OrderServiceSteps().sendOrder(order);
+        new OrderServiceSteps().riskCheckOrder(order);
         return order.getRecommendation();
     }
   }
@@ -60,7 +60,7 @@ public class PerformanceSteps{
   }
   
   @SuppressWarnings("rawtypes")
-  @When("^the orders are submitted with a concurrency of (\\d+)$")
+  @When("^the risk checks are submitted with a concurrency of (\\d+)$")
   public void the_orders_are_submitted_with_a_concurrency_of(int concurrency) throws Throwable {
     List<FutureTask> futures=new ArrayList<FutureTask>();
     ExecutorService executor = Executors.newFixedThreadPool(concurrency);
@@ -86,7 +86,7 @@ public class PerformanceSteps{
   
   @Then("^all responses should be returned within (\\d+) seconds$")
   public void all_responses_should_be_returned_within_seconds(int totalResponsesTimeInSeconds) throws Throwable {
-    System.out.println("Actual duration was :"+duration);
+    System.out.println("Actual duration was :"+duration+"ms");
     Assert.assertTrue("Duration exceeded specified duration. Expected under "+totalResponsesTimeInSeconds+", actual was "+duration, duration<(totalResponsesTimeInSeconds*1000));
   }
 

@@ -24,7 +24,7 @@ import org.jboss.order.domain.OrderBuilder;
 import org.jboss.rules.RulesTestBase;
 import org.junit.Test;
 
-public class OrderServiceRulesTest extends RulesTestBase{
+public class OrderServiceRiskTest extends RulesTestBase{
   /**
    * Good Practices - unit tests...
    * 1) should be self-contained
@@ -34,8 +34,8 @@ public class OrderServiceRulesTest extends RulesTestBase{
   
   @Test
   public void test_G3LowValue_shouldAccept() {
-//    compileAndLoadKieSession("order.rules");
-    loadKieSession();
+//    compileAndLoadKieSession("order.risk");
+    loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
       .country(Country.GBR)
@@ -50,7 +50,7 @@ public class OrderServiceRulesTest extends RulesTestBase{
   
   @Test
   public void test_G3MediumValue_shouldRefer() {
-    loadKieSession();
+    loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
       .country(Country.GBR)
@@ -66,7 +66,7 @@ public class OrderServiceRulesTest extends RulesTestBase{
 
   @Test
   public void test_G3HighValue_shouldReject() {
-    loadKieSession();
+    loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
       .country(Country.GBR)
@@ -81,7 +81,7 @@ public class OrderServiceRulesTest extends RulesTestBase{
   
   @Test
   public void test_nonG3_shouldReject() {
-    loadKieSession();
+    loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
       .country(Country.AFG)

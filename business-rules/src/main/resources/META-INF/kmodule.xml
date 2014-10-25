@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
-	
-	<kbase name="defaultKieBase" packages="order.rules">
-		<ksession name="defaultKieBase.session" type="stateful"/>
-	</kbase>
+	<!--
+    -->
+    <kbase name="defaultKieBase" packages="order.risk">
+        <ksession name="defaultKieBase.session" type="stateful"/>
+    </kbase>
+    <kbase name="order.risk.kb" packages="order.risk">
+        <ksession name="order.risk" type="stateful"/>
+    </kbase>
+    <kbase name="order.process.kb" packages="order.process">
+        <ksession name="order.process" type="stateful"/>
+    </kbase>
 	
 </kmodule>

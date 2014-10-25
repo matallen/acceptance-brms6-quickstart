@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<!-- 
 	# to run acceptance from CI (ie. start containers, deploy apps, run tests and stop containers) 
-	mvn clean install -Pbrms,itest -o
+	mvn clean install -Pbrms,acceptance -o
 	
 	# to start containers for Development purposes: 
 	mvn clean package cargo:run -Pbrms
@@ -42,7 +42,7 @@
 	
 	<build>
 		<plugins>
-			<!-- disable test by default, itest will use the failsafe plugin -->
+			<!-- disable test by default, acceptance will use the failsafe plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -302,7 +302,7 @@
 		</profile>
 		
 		<profile>
-            <id>itest</id>
+            <id>acceptance</id>
             <activation><activeByDefault>false</activeByDefault></activation>
             <build>
                 <plugins>

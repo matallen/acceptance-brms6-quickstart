@@ -2,6 +2,7 @@ package org.jboss.acceptance.steps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,23 +52,38 @@ public class OrderServiceSteps{
       orders.add(new Order(id, Country.valueOf(country), amount, items));
     }
   }
+  @Then("a new order is created with the following details:$")
+  public void a_new_order_is_created_with_the_following_details(List<Map<String,String>> table) throws Throwable {
+    an_order_exists_with_the_following_details(table);
+  }
 
-  @When("^the order is submitted$")
-  public void the_order_is_submitted() throws Throwable {
+  @When("^the risk check is performed$")
+  public void the_risk_check_is_performed() throws Throwable {
     for(Order order:orders)
-      sendOrder(order);
+      riskCheckOrder(order);
   }
   
-  public void sendOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
+  @When("^the order is submitted$")
+  public void the_order_is_submitted() throws Throwable {
+    for(Order order:orders){
+      String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
+      Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/start");
+      String responseString=response.asString();
+      if (response.getStatusCode()!=200)
+        throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
+      assertEquals(200, response.getStatusCode());
+      Order responseOrder=Json.toObject(responseString, Order.class);
+      assertTrue("The response order should have a positive processId, "+responseOrder.getProcessId()+" was returned. Whole response = "+responseString, responseOrder.getProcessId()>0);
+    }
+  }
+  
+  public void riskCheckOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
     String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
     Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
     String responseString=response.asString();
     if (response.getStatusCode()!=200)
       throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
-    
-//    log.debug("riskcheck response was ["+responseString+"]");
     assertEquals(200, response.getStatusCode());
-    
     Order responseOrder=Json.toObject(responseString, Order.class);
     order.setRisk(responseOrder.getRisk());
     order.setRecommendation(responseOrder.getRecommendation());
@@ -88,5 +104,6 @@ public class OrderServiceSteps{
     }
     assertEquals(table.size(), ordersCheckedCount);
   }
+  
   
 }

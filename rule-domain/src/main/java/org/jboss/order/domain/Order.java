@@ -8,10 +8,12 @@ public class Order {
   private Country country;
   private double amount;
   private String[] items;
+  private long processId;
   
   // rule setters
   private String risk;
   private String recommendation;
+  
   
   public Order(){} //for json
   public Order(String id, Country country, double amount, String[] items) {
@@ -58,7 +60,13 @@ public class Order {
   public void setRecommendation(String recommendation) {
     this.recommendation=recommendation;
   }
-  
+  public void setProcessId(long processId) {
+    this.processId=processId;
+  }
+  public long getProcessId(){
+    return processId;
+  }
+    
   public String toString(){
     return ToStringBuilder.reflectionToString(this);
   }
