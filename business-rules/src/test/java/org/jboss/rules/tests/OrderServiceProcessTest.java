@@ -17,7 +17,9 @@
 
 package org.jboss.rules.tests;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
 import org.jboss.order.domain.OrderBuilder;
@@ -31,8 +33,12 @@ public class OrderServiceProcessTest extends RulesTestBase{
   public void test_SalesOrderProcess() {
 //    compileAndLoadKieSession("order.risk");
     loadKieSession("order.process");
-    ProcessInstance process=session.startProcess("OrderProcess");
-    System.out.println(process);
+    Map<String,Object> parameters=new HashMap<String, Object>();
+    Order order=new OrderBuilder().id("1").country(Country.GBR).amount(10.00).build();
+    parameters.put("order", order);
+    session.startProcess("OrderProcess", parameters);
+    Order o;
+//    o.getRecommendation()
 //    Order order=new OrderBuilder().id("1")
 //      .country(Country.GBR)
 //      .amount(50.00)

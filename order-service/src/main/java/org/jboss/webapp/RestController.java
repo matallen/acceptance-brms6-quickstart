@@ -39,7 +39,7 @@ public class RestController {
       
       long processId=new RulesService(){public String getKieSessionName(){
           return "order.process";
-      }}.start("OrderProcess", parameters);
+      }}.startProcess("OrderProcess", parameters);
       
       order.setProcessId(processId);
       

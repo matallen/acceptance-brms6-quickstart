@@ -12,39 +12,77 @@
              xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
              xmlns:tns="http://www.jboss.org/drools">
 
-  <process processType="Private" isExecutable="true" id="OrderProcess" name="Default Process" tns:packageName="defaultPackage" tns:version="1" >
+  <itemDefinition id="_orderItem" structureRef="org.jboss.order.domain.Order" />
+
+  <process processType="Private" isExecutable="true" id="OrderProcess" name="OrderProcess" tns:packageName="defaultPackage" tns:version="1" >
+
+    <extensionElements>
+     <tns:import name="org.jboss.order.domain.Order" />
+     <tns:import name="org.jboss.rules.RiskCheck" />
+    </extensionElements>
+    <!-- process variables -->
+    <property id="order" itemSubjectRef="_orderItem"/>
 
     <!-- nodes -->
-    <startEvent id="StartEvent_1" name="" />
-    <endEvent id="EndEvent_1" name="" />
-    <scriptTask id="ScriptTask_1" name="Script Task 1" scriptFormat="http://www.java.com/java" >
-      <script>System.out.println("TEST FROM WITHIN PROCESS");</script>
+    <exclusiveGateway id="_8" name="Gateway" gatewayDirection="Diverging" />
+    <endEvent id="_9" name="Complete" >
+        <terminateEventDefinition />
+    </endEvent>
+    <startEvent id="StartEvent_1" name="Start" />
+    <endEvent id="EndEvent_1" name="Failed" >
+        <terminateEventDefinition />
+    </endEvent>
+    <scriptTask id="_13" name="Risk Check" scriptFormat="http://www.java.com/java" >
+      <script>new RiskCheck(kcontext).withSession("order.risk").withVariable("order").fireRules();</script>
     </scriptTask>
 
     <!-- connections -->
-    <sequenceFlow id="ScriptTask_1-EndEvent_1" sourceRef="ScriptTask_1" targetRef="EndEvent_1" />
-    <sequenceFlow id="StartEvent_1-ScriptTask_1" sourceRef="StartEvent_1" targetRef="ScriptTask_1" />
+    <sequenceFlow id="_13-_8" sourceRef="_13" targetRef="_8" />
+    <sequenceFlow id="_8-_9" sourceRef="_8" targetRef="_9" name="ACCEPT" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return ((Order)kcontext.getVariable("order")).getRecommendation().equals("ACCEPT");</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_8-EndEvent_1" sourceRef="_8" targetRef="EndEvent_1" name="REJECT" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return ((Order)kcontext.getVariable("order")).getRecommendation().equals("REJECT");</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="StartEvent_1-_13" sourceRef="StartEvent_1" targetRef="_13" />
 
   </process>
 
   <bpmndi:BPMNDiagram>
     <bpmndi:BPMNPlane bpmnElement="OrderProcess" >
+      <bpmndi:BPMNShape bpmnElement="_8" >
+        <dc:Bounds x="376" y="156" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_9" >
+        <dc:Bounds x="605" y="156" width="48" height="48" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="StartEvent_1" >
-        <dc:Bounds x="134" y="123" width="48" height="48" />
+        <dc:Bounds x="28" y="156" width="48" height="48" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="EndEvent_1" >
-        <dc:Bounds x="390" y="117" width="48" height="48" />
+        <dc:Bounds x="770" y="240" width="48" height="48" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="ScriptTask_1" >
-        <dc:Bounds x="255" y="125" width="80" height="48" />
+      <bpmndi:BPMNShape bpmnElement="_13" >
+        <dc:Bounds x="180" y="156" width="80" height="48" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="ScriptTask_1-EndEvent_1" >
-        <di:waypoint x="295" y="149" />
-        <di:waypoint x="414" y="141" />
+      <bpmndi:BPMNEdge bpmnElement="_13-_8" >
+        <di:waypoint x="220" y="180" />
+        <di:waypoint x="400" y="180" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="StartEvent_1-ScriptTask_1" >
-        <di:waypoint x="158" y="147" />
-        <di:waypoint x="295" y="149" />
+      <bpmndi:BPMNEdge bpmnElement="_8-_9" >
+        <di:waypoint x="400" y="180" />
+        <di:waypoint x="506" y="180" />
+        <di:waypoint x="506" y="180" />
+        <di:waypoint x="629" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_8-EndEvent_1" >
+        <di:waypoint x="400" y="180" />
+        <di:waypoint x="400" y="264" />
+        <di:waypoint x="794" y="264" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="StartEvent_1-_13" >
+        <di:waypoint x="52" y="180" />
+        <di:waypoint x="220" y="180" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

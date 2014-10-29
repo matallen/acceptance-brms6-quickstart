@@ -28,11 +28,11 @@ public class RulesService {
     return "defaultKieBase.session";
   }
   
-  public long start(String processId){
-    return start(processId, emptyMap);
+  public long startProcess(String processId){
+    return startProcess(processId, emptyMap);
   }
   
-  public long start(String processId, Map<String,Object> parameters){
+  public long startProcess(String processId, Map<String,Object> parameters){
     Metrics metrics=new Metrics();
     
     metrics.start();
