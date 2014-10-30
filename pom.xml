@@ -15,7 +15,7 @@
 	<modules>
 		<module>business-rules</module>
 		<module>rule-domain</module>
-		<module>order-service</module>
+		<module>banking-service</module>
 	</modules>
 	
 	<profiles>
