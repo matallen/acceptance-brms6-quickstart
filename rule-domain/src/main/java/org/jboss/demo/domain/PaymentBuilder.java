@@ -5,6 +5,7 @@ public class PaymentBuilder {
   private String fromAccount;
   private String toAccount;
   private double value;
+  private boolean sent;
   
   public PaymentBuilder fromAccount(String fromAccount){
     this.fromAccount=fromAccount; return this;
@@ -18,7 +19,10 @@ public class PaymentBuilder {
   public PaymentBuilder value(double value){
     this.value=value; return this;
   }
+  public PaymentBuilder sent(boolean sent){
+    this.sent=sent; return this;
+  }
   public Payment build(){
-    return new Payment(id, fromAccount, toAccount, value);
+    return new Payment(id, fromAccount, toAccount, value, sent);
   }
 }

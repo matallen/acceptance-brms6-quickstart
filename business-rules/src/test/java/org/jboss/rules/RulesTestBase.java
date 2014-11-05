@@ -3,12 +3,17 @@ package org.jboss.rules;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.drools.compiler.lang.dsl.DSLTokenizedMappingFile;
+import org.drools.compiler.lang.dsl.DefaultExpander;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Assert;
@@ -52,8 +57,8 @@ public class RulesTestBase {
 	  }
     KieBuilder builder=kieServices.newKieBuilder(kfs);
     builder.buildAll();
-    Assert.assertEquals( 0, builder.getResults().getMessages( Message.Level.ERROR ).size() );
-    System.out.println(builder.getResults());
+    Assert.assertEquals(builder.getResults().getMessages( Message.Level.ERROR ).toString(), 0, builder.getResults().getMessages( Message.Level.ERROR ).size() );
+//    System.out.println(builder.getResults());
 	}
 	
 	/**
@@ -124,4 +129,19 @@ public class RulesTestBase {
 			session.dispose();
 		}
 	}
+	
+	
+  public String parseDRLFromDSL(File dslFile, File ruleFile) throws FileNotFoundException {
+    DSLTokenizedMappingFile mapfile=new DSLTokenizedMappingFile();
+    DefaultExpander expander=new DefaultExpander();
+    Reader dslReader=new FileReader(dslFile);
+    Reader dslrReader=new FileReader(ruleFile);
+    try {
+      mapfile.parseAndLoad(dslReader);
+      expander.addDSLMapping(mapfile.getMapping());
+      return expander.expand(dslrReader);
+    } catch (IOException e) {
+      return expander.getErrors().toString();
+    }
+  }
 }

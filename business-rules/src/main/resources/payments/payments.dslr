@@ -1,0 +1,32 @@
+package banking.payments
+
+import org.jboss.demo.domain.*;
+
+expander language.dsl
+
+rule "Scenario 1 - Successful payment when funds are available"
+salience 1
+no-loop
+when
+    There is an account
+    There is a payment scheduled
+    There is enough funds in the account
+then
+    Payment will be sent
+    Owner will be notified of succesful payment
+end
+
+
+rule "Scenario 2 - Successful payment when funds are not available but has an overdraft setup"
+salience 2
+no-loop
+when
+    There is an account
+    There is a payment scheduled
+    There is only enough fund when using the overdraft on the account 
+then
+    Payment will be sent
+    Owner will be notified of succesful payment
+end
+
+#... todo Scenario 3

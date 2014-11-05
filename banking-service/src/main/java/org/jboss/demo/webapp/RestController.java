@@ -1,9 +1,7 @@
 package org.jboss.demo.webapp;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -54,7 +52,7 @@ public class RestController {
   
   @POST
   @Path("/payments/create")
-  public Response createRecurringPayment(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+  public Response createPayment(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
     String payload=IOUtils.toString(request.getInputStream());
     log.info("[/payments/create] Called with payload "+payload);
     Payment r=(Payment)Json.toObject(payload, Payment.class);
@@ -91,24 +89,43 @@ public class RestController {
   @POST
   @Path("/payments/process")
   public Response processPayments(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+    String originalKieMavenCustomSettings=setCustomMavenSettings();
+    
     for(Entry<String,Payment> e:demoPaymentsRepository.entrySet()){
-      Account fromAccount=demoAccountRepository.get(e.getValue().getFromAccount());
-      Account toAccount=demoAccountRepository.get(e.getValue().getToAccount());
-      double value=e.getValue().getValue();
-      if ((fromAccount.getBalance()+fromAccount.getOverdraft())>value){
-        fromAccount.debit(value);
-        toAccount.credit(value);
-        e.getValue().notify(fromAccount.getAccountId(), "SUCCESS");
-        System.out.println("payment made");
-      }else{
-        System.err.println("no payment made");
-        e.getValue().notify(fromAccount.getAccountId(), "FAILURE");
+      Payment payment=e.getValue();
+      Account fromAccount=demoAccountRepository.get(payment.getFromAccount());
+      Account toAccount=demoAccountRepository.get(payment.getToAccount());
+      
+      // execute the rules to determine if Payment can/should be made
+      new RulesService(){
+        public String getKieSessionName(){
+          return "payments";
+      }}.execute(payment, fromAccount, toAccount);
+      
+      // "sent" flag means Payment should be made, so make it
+      if (payment.getSent()){ // rules determine payment should be sent
+        toAccount.credit(payment.getValue());
+        fromAccount.debit(payment.getValue());
       }
+      
+      // OLD CODE for making payment - its moved to rules now
+      
+//      double value=e.getValue().getValue();
+//      if ((fromAccount.getBalance()+fromAccount.getOverdraft())>value){
+//        fromAccount.debit(value);
+//        toAccount.credit(value);
+//        e.getValue().notify(fromAccount.getAccountId(), "SUCCESS");
+//        System.out.println("payment made");
+//      }else{
+//        System.err.println("no payment made");
+//        e.getValue().notify(fromAccount.getAccountId(), "FAILURE");
+//      }
     }
+    
+    restoreMavenSettings(originalKieMavenCustomSettings);
+    
     return Response.status(200).entity("OK").build();
   }
-  
-  
   
   @POST
   @Path("/clear")
@@ -117,6 +134,34 @@ public class RestController {
     demoPaymentsRepository.clear();
     return Response.status(200).entity("OK").build();
   }
+  
+  
+  private String setCustomMavenSettings(){
+    String originalKieMavenSettingsCustom=System.getProperty("kie.maven.settings.custom");
+    System.setProperty("kie.maven.settings.custom", System.getProperty("kie.maven.client.settings.custom"));
+    return originalKieMavenSettingsCustom;
+  }
+  private void restoreMavenSettings(String originalValue){
+    if (null==originalValue){
+      System.clearProperty("kie.maven.settings.custom");
+    }else
+      System.setProperty("kie.maven.settings.custom", originalValue);
+  
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 //  @POST
 //  @Path("/start")

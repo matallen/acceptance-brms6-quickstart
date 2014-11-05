@@ -1,6 +1,17 @@
-Feature: Banking Service - Recurring Payments
+Feature: Banking Service - Payments
 
-Scenario: 01 - Successful recurring payment when funds are available
+# ==========
+# Demo steps
+# ==========
+# Start separate BPMS
+# Show Jenkins cucumber reporting + failing scenario 3 due to no rule implemented
+# write rule
+# build and deploy rule in BPMS
+# re-run jenkins
+# show cucumber reporting and all tests passing
+
+
+Scenario: 01 - Successful payment when funds are available
 Given there is an account:
 |Account Id |FirstName |Surname |Balance |Overdraft |
 |00001      |Mat       |Allen   |100.00  |0.00      |
@@ -15,7 +26,7 @@ And the account owner will be notified:
 |A          |00001      |Success |
 
 
-Scenario: 02 - Successful recurring payment when funds are not available but there is an overdraft setup
+Scenario: 02 - Successful payment when funds are not available but there is an overdraft setup
 Given there is an account:
 |Account Id |FirstName |Surname |Balance |Overdraft |
 |00001      |Mat       |Allen   |100.00  |100.00    |
@@ -30,7 +41,7 @@ And the account owner will be notified:
 |B          |00001      |Success |
 
 
-Scenario: 02 - Failed recurring payment when funds are not available no overdraft setup
+Scenario: 03 - Failed payment when funds are not available no overdraft setup
 Given there is an account:
 |Account Id |FirstName |Surname |Balance |Overdraft |
 |00001      |Mat       |Allen   |100.00  |0.00      |

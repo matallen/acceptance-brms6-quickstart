@@ -33,15 +33,15 @@ import cucumber.api.java.en.When;
 
 public class BankingServiceSteps{
   private static final Logger log=LoggerFactory.getLogger(BankingServiceSteps.class);
-  private static final String SERVICE_URL="http://localhost:16080/banking-service";
+  private static final String SERVICE_URL="http://localhost:16080/banking-service/rest";
   private Map<String, Account> accounts=new HashMap<String, Account>();
   private Map<String,Payment> payments=new HashMap<String,Payment>();
   
   private static boolean initialised = false;
   @Before public void beforeAll(){
     if(!initialised) initialised=Utils.beforeScenarios();
-    assertEquals("Banking service is not deployed", 200, given().when().get(SERVICE_URL+"/version").getStatusCode());
-    assertEquals("Clearing old account data failed", 200, given().when().post(SERVICE_URL+"/rest/clear").getStatusCode());
+    assertEquals("Banking service is not deployed", 200, given().when().get(SERVICE_URL.replaceAll("rest", "")+"/version").getStatusCode());
+    assertEquals("Clearing old account data failed", 200, given().when().post(SERVICE_URL+"/clear").getStatusCode());
     accounts.clear();
     payments.clear();
   }
@@ -57,7 +57,7 @@ public class BankingServiceSteps{
       account.setBalance(Double.parseDouble(row.get("Balance")));
       account.setOverdraft(Double.parseDouble(row.get("Overdraft")));
       
-      Account newAccount=post(SERVICE_URL+"/rest/accounts/create", account, Account.class);
+      Account newAccount=post(SERVICE_URL+"/accounts/create", account, Account.class);
       
       accounts.put(newAccount.getAccountId(), newAccount);
     }
@@ -72,8 +72,9 @@ public class BankingServiceSteps{
       payment.setFromAccount(row.get("From Account"));
       payment.setToAccount(row.get("To Account"));
       payment.setValue(Double.parseDouble(row.get("Value")));
+      payment.setSent(false);
       
-      Payment newPayment=post(SERVICE_URL+"/rest/payments/create", payment, Payment.class);
+      Payment newPayment=post(SERVICE_URL+"/payments/create", payment, Payment.class);
       
       payments.put(newPayment.getId(), newPayment);
     }
@@ -82,7 +83,7 @@ public class BankingServiceSteps{
   @When("^there is enough funds in the account$")
   public void there_is_enough_funds_in_the_account() throws Throwable {
     for(Payment payment:payments.values()){
-      String balance=get(SERVICE_URL+"/rest/accounts/"+payment.getFromAccount()+"/balance");
+      String balance=get(SERVICE_URL+"/accounts/"+payment.getFromAccount()+"/balance");
       double valueInAccount=Double.parseDouble(balance);
       double valueToTransfer=payment.getValue();
       assertTrue("Not enough funds in account, found "+valueInAccount+", needed "+valueToTransfer, valueInAccount>=valueToTransfer);
@@ -92,7 +93,7 @@ public class BankingServiceSteps{
   @When("^there is not enough funds in the account$")
   public void there_is_not_enough_funds_in_the_account() throws Throwable {
     for(Payment payment:payments.values()){
-      String balance=get(SERVICE_URL+"/rest/accounts/"+payment.getFromAccount()+"/balance");
+      String balance=get(SERVICE_URL+"/accounts/"+payment.getFromAccount()+"/balance");
       double valueInAccount=Double.parseDouble(balance);
       double valueToTransfer=payment.getValue();
       assertTrue("Too much funds in account, found "+valueInAccount+", expected less", valueInAccount<valueToTransfer);
@@ -101,13 +102,13 @@ public class BankingServiceSteps{
 
   @Then("^a payment will be generated$")
   public void a_payment_will_be_generated() throws Throwable {
-    post(SERVICE_URL+"/rest/payments/process");
+    post(SERVICE_URL+"/payments/process");
   }
 
   @Then("^the account owner will be notified:$")
   public void the_account_owner_will_be_notified(List<Map<String, String>> table) throws Throwable {
     for(Map<String,String> row:table){
-      Response response=given().when().get(SERVICE_URL+"/rest/payments/"+row.get("Payment Id"));
+      Response response=given().when().get(SERVICE_URL+"/payments/"+row.get("Payment Id"));
       String responseString=response.asString();
       if (response.getStatusCode()!=200)
         throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");

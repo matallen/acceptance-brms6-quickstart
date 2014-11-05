@@ -7,15 +7,17 @@ public class Payment {
   private double value;
   private String notifiedAccount;
   private String notifiedOutcome;
+  private boolean sent;
   public Payment(){
     //simple constructor for JSON
   }
-  public Payment(String id,String fromAccount, String toAccount, double value) {
+  public Payment(String id,String fromAccount, String toAccount, double value, boolean sent) {
     super();
     this.id=id;
     this.fromAccount=fromAccount;
     this.toAccount=toAccount;
     this.value=value;
+    this.sent=sent;
   }
   public String getFromAccount() {
     return fromAccount;
@@ -41,6 +43,12 @@ public class Payment {
   }
   public String getNotifiedOutcome() {
     return notifiedOutcome;
+  }
+  public boolean getSent(){
+    return sent;
+  }
+  public void setSent(boolean sent){
+    this.sent=sent;
   }
   
   // for JSON

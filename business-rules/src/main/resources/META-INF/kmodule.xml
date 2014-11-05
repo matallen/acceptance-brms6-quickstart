@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="defaultKieBase" packages="payments">
+        <ksession name="defaultKieBase.session" type="stateful"/>
+    </kbase>
+    <kbase name="paymentsKieBase" packages="payments">
+        <ksession name="payments" type="stateful"/>
+    </kbase>
 	<!--
     <kbase name="defaultKieBase" packages="order.risk">
         <ksession name="defaultKieBase.session" type="stateful"/>
