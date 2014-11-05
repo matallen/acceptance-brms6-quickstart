@@ -13,7 +13,7 @@ when
     There is enough funds in the account
 then
     Payment will be sent
-    Owner will be notified of succesful payment
+    Owner will be notified of successful payment
 end
 
 
@@ -26,7 +26,18 @@ when
     There is only enough fund when using the overdraft on the account 
 then
     Payment will be sent
-    Owner will be notified of succesful payment
+    Owner will be notified of successful payment
 end
 
-#... todo Scenario 3
+rule "Scenario 3 - Failed payment when funds are not available and no overdraft"
+salience 3
+no-loop
+when
+    There is an account
+    There is a payment scheduled
+    There is not enough funds including the overdraft 
+then
+    Payment will not be sent
+    Owner will be notified of failed payment
+end
+
