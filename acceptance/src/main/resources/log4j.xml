@@ -25,6 +25,13 @@
     <logger name="com.jayway.restassured">
         <level value="WARN" />
     </logger>
+    <!-- 
+  <logger name="org.drools"><level value="DEBUG" /></logger>
+  <logger name="org.kie"><level value="DEBUG" /></logger>
+  <logger name="org.jboss"><level value="DEBUG" /></logger>
+  <logger name="org.jboss.resteasy"><level value="INFO" /></logger>
+     -->
+  
 	
 	<root>
 		<priority value="debug" />

@@ -24,9 +24,6 @@
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
 				<brms.version>6.0.3-redhat-4</brms.version>
-				<!--
-				<kie-maven-plugin.version>6.1.0.CR2</kie-maven-plugin.version> <!- because 6.0.3-redhat-4 has bug - https://issues.jboss.org/browse/DROOLS-373 / https://bugzilla.redhat.com/show_bug.cgi?id=1039676 ->
-				-->
 			</properties>
 			<dependencyManagement>
 				<dependencies>

@@ -6,9 +6,6 @@
 	# to start containers for Development purposes: 
 	mvn clean package cargo:run -Pbrms
 	
-	http://localhost:8080/business-central/maven2/org/jboss/quickstarts/brms6/business-rules/6.0.0-SNAPSHOT/business-rules-6.0.0-SNAPSHOT.jar
-	http://localhost:8080/banking-service/rest/riskcheck
-	
 	-->
 	<modelVersion>4.0.0</modelVersion>
 	<name>${project.groupId}.${project.artifactId}</name>
@@ -33,19 +30,6 @@
 	       <url>http://nexus.gsso.redhat.com/nexus/content/repositories/releases/</url>
 	   </pluginRepository>
 	</pluginRepositories>
-	
-	<!--
-	for cucumber-java
-    <repositories>
-		<repository>
-			<id>sonatype-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-    </repositories>	
-	-->
 	
 	
 	<build>
@@ -204,9 +188,9 @@
 										-Dcom.sun.management.jmxremote.port=6000
 										-Dcom.sun.management.jmxremote.authenticate=false
 										-Dcom.sun.management.jmxremote.ssl=false
-										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Xnoagent
 									-->
 									<cargo.jvmargs>
+										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Xnoagent
 										-Xmx1024m
 										-XX:MaxPermSize=256m
 									</cargo.jvmargs>

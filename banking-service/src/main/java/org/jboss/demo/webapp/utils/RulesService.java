@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.demo.webapp.DroolsAgendaEventListener;
+import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
+import org.kie.api.builder.KieScanner;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.rule.Rule;
 import org.kie.api.event.rule.AgendaEventListener;
@@ -18,6 +21,7 @@ import org.slf4j.LoggerFactory;
 public class RulesService {
   private static final Logger log = LoggerFactory.getLogger(RulesService.class);
   private static KieContainer kContainer=null;
+  private static KieScanner kScanner=null;
   private static boolean headerPrinted=false;
   private static Map<String,Object> emptyMap=new HashMap<String, Object>();
   
@@ -71,17 +75,28 @@ public class RulesService {
     KieServices kieServices = KieServices.Factory.get();
     metrics.end("InitkieServices");
     
+    if (kScanner!=null)
+      kScanner.scanNow();
+    
     if (kContainer==null){
-      kContainer=kieServices.newKieClasspathContainer(); // uses kie modules from the maven pom dependencies
+//      kContainer=kieServices.newKieClasspathContainer(); // uses kie modules from the maven pom dependencies
+      kContainer=kieServices.newKieContainer(kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", "6.0.0-SNAPSHOT"));
       metrics.end("InitKieContainer");
+      
+      kScanner=kieServices.newKieScanner(kContainer);
+      kScanner.start(10000l);
     }
     
     AgendaEventListener listener=new DroolsAgendaEventListener();
     KieSession session=null;
     try{
-      session = kContainer.newKieSession(getKieSessionName());
+      KieBaseConfiguration kConfig = kieServices.newKieBaseConfiguration();
+      kConfig.setOption(EventProcessingOption.CLOUD);
+      session = kContainer.newKieBase("defaultKieBase", kConfig).newKieSession();
+//      session = kContainer.newKieSession(getKieSessionName());
       metrics.end("initKieSession");
       
+      if (null==session) throw new RuntimeException("Unable to find ksession: "+getKieSessionName());
       if (0==session.getKieBase().getKiePackages().size()) throw new RuntimeException("No Rules in kBase!!!");
       
       if (log.isDebugEnabled()){
@@ -114,8 +129,10 @@ public class RulesService {
       return numberOfRulesFired; // perhaps return the list of rule names fired provided by the event listener would be more useful
       
     }finally{
-      session.removeEventListener((AgendaEventListener)listener);
-      if (null!=session) session.dispose();
+      if (null!=session){
+        session.removeEventListener((AgendaEventListener)listener);
+        session.dispose();
+      }
     }
   }
 }
