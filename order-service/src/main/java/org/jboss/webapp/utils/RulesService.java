@@ -1,3 +1,20 @@
+/*
+* JBoss, Home of Professional Open Source
+* Copyright 2014, Red Hat, Inc. and/or its affiliates, and individual
+* contributors by the @authors tag. See the copyright.txt in the
+* distribution for a full listing of individual contributors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* http://www.apache.org/licenses/LICENSE-2.0
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package org.jboss.webapp.utils;
 
 import java.util.Arrays;
@@ -28,11 +45,11 @@ public class RulesService {
     return "defaultKieBase.session";
   }
   
-  public long startProcess(String processId){
+  public ProcessInstance startProcess(String processId){
     return startProcess(processId, emptyMap);
   }
   
-  public long startProcess(String processId, Map<String,Object> parameters){
+  public ProcessInstance startProcess(String processId, Map<String,Object> parameters){
     Metrics metrics=new Metrics();
     
     metrics.start();
@@ -49,7 +66,7 @@ public class RulesService {
       session = kContainer.newKieSession(getKieSessionName());
       metrics.end("initKieSession");
       ProcessInstance processInstance=session.startProcess(processId, parameters);
-      return processInstance.getId();
+      return processInstance;
     }finally{
 //      session.removeEventListener((AgendaEventListener)listener);
       if (null!=session) session.dispose();

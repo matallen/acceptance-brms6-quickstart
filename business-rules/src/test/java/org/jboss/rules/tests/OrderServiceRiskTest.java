@@ -18,6 +18,8 @@
 package org.jboss.rules.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.apache.commons.lang.StringUtils;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
 import org.jboss.order.domain.OrderBuilder;
@@ -33,7 +35,7 @@ public class OrderServiceRiskTest extends RulesTestBase{
    */
   
   @Test
-  public void test_G3LowValue_shouldAccept() {
+  public void test_EuroLowValue_shouldAccept() {
 //    compileAndLoadKieSession("order.risk");
     loadKieSession("order.risk");
     
@@ -43,13 +45,13 @@ public class OrderServiceRiskTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("LOW", order.getRisk());
-    assertEquals("ACCEPT", order.getRecommendation());
-    assertEquals(2, rules);
+    assertEquals("ACCEPT", order.getRiskStatus());
+    assertTrue(StringUtils.isEmpty(order.getRiskReason()));
+    assertEquals(1, rules);
   }
   
   @Test
-  public void test_G3MediumValue_shouldRefer() {
+  public void test_EuroMediumValue_shouldRefer() {
     loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
@@ -58,14 +60,14 @@ public class OrderServiceRiskTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("MEDIUM", order.getRisk());
-    assertEquals("REFER", order.getRecommendation());
+    assertEquals("REFER", order.getRiskStatus());
+    assertEquals("MEDIUM ORDER VALUE", order.getRiskReason());
     assertEquals(1, rules);
   }
   
 
   @Test
-  public void test_G3HighValue_shouldReject() {
+  public void test_EuroHighValue_shouldReject() {
     loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
@@ -74,13 +76,13 @@ public class OrderServiceRiskTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("HIGH", order.getRisk());
-    assertEquals("REJECT", order.getRecommendation());
-    assertEquals(2, rules);
+    assertEquals("REJECT", order.getRiskStatus());
+    assertEquals("ORDER AMOUNT TOO HIGH", order.getRiskReason());
+    assertEquals(1, rules);
   }
   
   @Test
-  public void test_nonG3_shouldReject() {
+  public void test_UnknownCountry_shouldReject() {
     loadKieSession("order.risk");
     
     Order order=new OrderBuilder().id("1")
@@ -89,8 +91,8 @@ public class OrderServiceRiskTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("HIGH", order.getRisk());
-    assertEquals("REJECT", order.getRecommendation());
+    assertEquals("REJECT", order.getRiskStatus());
+    assertEquals("COUNTRY NOT KNOWN", order.getRiskReason());
     assertEquals(1, rules);
   }
 }

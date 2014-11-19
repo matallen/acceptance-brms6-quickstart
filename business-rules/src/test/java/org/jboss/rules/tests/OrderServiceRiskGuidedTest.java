@@ -19,10 +19,6 @@ package org.jboss.rules.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
@@ -30,20 +26,20 @@ import org.jboss.order.domain.OrderBuilder;
 import org.jboss.rules.RulesTestBase;
 import org.junit.Test;
 
-public class OrderServiceProcessTest extends RulesTestBase{
-  
+public class OrderServiceRiskGuidedTest extends RulesTestBase{
   @Test
-  public void test_ShouldCreateSalesOrderProcessAndExecuteRiskRules() {
-    loadKieSession("order.process");
-    Map<String,Object> parameters=new HashMap<String, Object>();
-    Order order=new OrderBuilder().id("1").country(Country.GBR).amount(10.00).build();
-    order.setRiskStatus("REJECT");
-    order.setRiskReason("");
+  public void test_EuroLowValue_shouldAccept() {
+//    compileAndLoadKieSession("order.riskguided");
+    loadKieSession("order.riskguided");
     
-    parameters.put("order", order);
-    session.startProcess("OrderProcess", parameters);
+    Order order=new OrderBuilder().id("1")
+      .country(Country.GBR)
+      .amount(50.00)
+      .build();
+    int rules=fireAllRules(order);
     
     assertEquals("ACCEPT", order.getRiskStatus());
     assertTrue(StringUtils.isEmpty(order.getRiskReason()));
+    assertEquals(1, rules);
   }
 }

@@ -29,11 +29,6 @@
 						      <Version>${project.version}</Version>
 						      <Jenkins-build>${build.number}</Jenkins-build>
 						      <Jenkins-id>${build.id}</Jenkins-id>
-						      <!-- 
-							<Specification-Title>${project.name}</Specification-Title>
-							<Specification-Version>${project.version}</Specification-Version>
-							<Implementation-Version>${build.number}</Implementation-Version>
-						       -->
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -47,21 +42,11 @@
 			<artifactId>kie-api</artifactId>
 			<version>${brms.version}</version>
 		</dependency>
-		
-		<!-- logging -->
-		<!--
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.2</version>
-		</dependency>
-		-->
-		
+        <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-ci</artifactId>
+            <version>${brms.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -135,7 +120,7 @@
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>2.2.1.GA</version>
 			<!--
-			provided for EAP, not to Tomcat 
+			provided for EAP, not for Tomcat 
 			<scope>provided</scope>
 			 -->
 		</dependency>

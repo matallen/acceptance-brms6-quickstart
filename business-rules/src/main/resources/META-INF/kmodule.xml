@@ -8,6 +8,9 @@
     <kbase name="order.risk.kb" packages="order.risk">
         <ksession name="order.risk" type="stateful"/>
     </kbase>
+    <kbase name="order.riskguided.kb" packages="order.riskguided">
+        <ksession name="order.riskguided" type="stateful"/>
+    </kbase>
     <kbase name="order.process.kb" packages="order.process">
         <ksession name="order.process" type="stateful"/>
     </kbase>

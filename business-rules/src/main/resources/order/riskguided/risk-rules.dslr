@@ -1,0 +1,15 @@
+package riskguided
+
+import org.jboss.order.domain.Order;
+import org.jboss.order.domain.Country;
+
+expander language.dsl
+
+rule "Accept European countries with order value under 100"
+when
+    There is an order
+    with amount under 100
+    which originates in GBR
+then
+    Set risk status to ACCEPT
+end
