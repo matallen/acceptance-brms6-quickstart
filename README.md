@@ -31,7 +31,7 @@ acceptance-brms6-quickstart
 
 **to run acceptance for CI (ie. start containers, deploy apps, run tests and stop containers)**
 
-```acceptance/mvn clean install -Pbrms,itest```
+```acceptance/mvn clean install -Pbrms,acceptance```
 
 **to develop (ie. start containers, deploy apps and pause so a dev can develop tests against the containers)**
 
