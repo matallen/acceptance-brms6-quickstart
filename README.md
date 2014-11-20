@@ -59,9 +59,34 @@ mvn clean install -DskipTests
 **Add more webapps to the acceptance tests**
 In the cargo plugin config, add a `<deployable>` entry for your webapps maven GAV (groupId, artifactId and version) and it will be deployed
 
+**Enable remote debugging**
+In the acceptance/pom.xml, move the `-Drunjdwp` line down into the `<cargo.jvmargs>` like this:
+```
+<cargo.jvmargs>
+-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Xnoagent
+-Xmx1024m
+-XX:MaxPermSize=256m
+</cargo.jvmargs>
+```
+You can now use your IDEs remote debugging option when the container is running to debug your BDD test steps.
 
-### Testing
+### Configuration
 
+**How to setup Jenkins**
+
+* Install Jenkins, or use an OpenShift instance 
+* Install Jenkins Plugins
+ * Go to Jenkins->Manage Jenkins->Manage Plugins
+ * Click "Advanced" tab and select "Check Now" to populate the list of available plugins
+ * Click on the "Available" tab and select the following plugins:
+   * Github plugin: builds project every time you push to GitHub
+   * Cucumber Reports: generates and provides a url to view the reports
+   * Green Balls (Optional): Green just makes more sense than Blue!
+   * Click "Download now and install after restart". Then Restart Jenkins
+* Create a new "free-style software project" Job called "trunk"
+* Enter the following as the "shell command" `mvn clean install`
+* Then create another "free-style software project" Job called "acceptance"
+* Enter the following in the "shell command" box `cd acceptance; mvn clean install -Pbrms,acceptance`
 
 
 ### Notes
