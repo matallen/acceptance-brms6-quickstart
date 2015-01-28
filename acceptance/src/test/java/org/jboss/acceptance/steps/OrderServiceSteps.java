@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.plexus.util.StringUtils;
 import org.jboss.acceptance.utils.Json;
 import org.jboss.acceptance.utils.Utils;
 import org.jboss.order.domain.Country;

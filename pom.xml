@@ -32,6 +32,8 @@
 			<dependencyManagement>
 				<dependencies>
 					<!-- mallen: TRY THIS
+					+ org.drools/drools-bom
+					-->
 					<dependency>
 						<groupId>org.kie</groupId>
 						<artifactId>kie-bom</artifactId>
@@ -39,8 +41,6 @@
 						<type>pom</type>
 						<scope>import</scope>
 					</dependency>
-					+ org.drools/drools-bom
-					-->
 					<dependency>
 						<groupId>org.antlr</groupId>
 						<artifactId>antlr-runtime</artifactId>

@@ -3,7 +3,7 @@
 	# to run acceptance from CI (ie. start containers, deploy apps, run tests and stop containers) 
 	mvn clean install -Pbrms,acceptance -o
 	
-	# to start containers for Development purposes: 
+	# to start containers for Development purposes (ie. run RunCucumberTests.java from IDE): 
 	mvn clean package cargo:run -Pbrms
 	
 	-->
@@ -104,9 +104,9 @@
 									<bpms.username>admin</bpms.username>
 									<bpms.password>admin</bpms.password>
 									<bpms.url>${target.server}/business-central</bpms.url>
-								<!-- 
+								    <!--
 									<org.kie.demo>false</org.kie.demo>
-								 -->
+								    -->
 									<!-- push the temporary CI information into target folder ready to be cleaned up  -->
 									<org.uberfire.nio.git.dir>${project.build.directory}</org.uberfire.nio.git.dir>
 									<!-- local repo for BPMS -->
@@ -358,7 +358,6 @@
 			<groupId>org.kie</groupId>
 			<artifactId>kie-drools-wb-distribution-wars</artifactId>
 			<classifier>tomcat7.0</classifier>
-			<version>${brms.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -434,12 +433,11 @@
             <scope>test</scope>
         </dependency>
         
-		<!-- to force module build order only -->
 		<dependency>
-			<groupId>org.jboss.quickstarts.brms6</groupId>
-			<artifactId>business-rules</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+            <groupId>org.jboss.quickstarts.brms6</groupId>
+            <artifactId>rule-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		
 		<!-- for http interactions -->
 		<dependency>
@@ -453,18 +451,5 @@
             <version>4.2.5</version>
         </dependency>
         
-        <!--
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-        -->
-                                    
 	</dependencies>
 </project>

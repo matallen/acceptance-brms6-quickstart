@@ -23,8 +23,6 @@ import static org.junit.Assert.assertEquals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
-
 public class Utils {
   private static final Logger log=LoggerFactory.getLogger(Utils.class);
   
@@ -35,9 +33,9 @@ public class Utils {
         String username=System.getProperty("bpms.username")!=null?System.getProperty("bpms.username"):"admin";
         String password=System.getProperty("bpms.password")!=null?System.getProperty("bpms.password"):"admin";
         String serverUrl=System.getProperty("bpms.url")!=null?System.getProperty("bpms.url"):"http://localhost:16080/business-central";
-        Preconditions.checkArgument(username!=null, "bpms.username cannot be null");
-        Preconditions.checkArgument(password!=null, "bpms.password cannot be null");
-        Preconditions.checkArgument(serverUrl!=null, "bpms.base.url cannot be null");
+        if (username==null) throw new RuntimeException("bpms.username cannot be null");
+        if (password==null) throw new RuntimeException("bpms.password cannot be null");
+        if (serverUrl==null) throw new RuntimeException("bpms.base.url cannot be null");
         String response=given().when().auth().preemptive().basic(username, password).get(serverUrl+"/rest/deployment").asString();
         boolean result=response.contains("business-rules");
         if (result)
