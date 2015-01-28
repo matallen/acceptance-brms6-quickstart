@@ -20,10 +20,14 @@
 	
 	<profiles>
 		<profile>
-			<id>brms-6.0.2.GA</id>
+		    <!--
+		    6.0.2.GA == 6.0.3-redhat-4
+		    6.0.3.GA == 6.0.3-redhat-6
+		    -->
+			<id>brms-6.0.3.GA</id>
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
-				<brms.version>6.0.3-redhat-4</brms.version>
+				<brms.version>6.0.3-redhat-6</brms.version>
 			</properties>
 			<dependencyManagement>
 				<dependencies>
@@ -31,7 +35,7 @@
 					<dependency>
 						<groupId>org.kie</groupId>
 						<artifactId>kie-bom</artifactId>
-						<version>6.0.3-redhat-4</version>
+						<version>${brms.version}</version>
 						<type>pom</type>
 						<scope>import</scope>
 					</dependency>
@@ -200,7 +204,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.kie</groupId>
 										<artifactId>kie-maven-plugin</artifactId>
-										<versionRange>[6.0.3-redhat-4,)</versionRange>
+										<versionRange>[6.0.3-redhat-6,)</versionRange>
 										<goals>
 											<goal>build</goal>
 										</goals>
