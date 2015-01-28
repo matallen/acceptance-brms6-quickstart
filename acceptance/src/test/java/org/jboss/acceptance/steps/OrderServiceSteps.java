@@ -34,6 +34,7 @@ import org.jboss.acceptance.utils.Json;
 import org.jboss.acceptance.utils.Utils;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,66 +57,67 @@ public class OrderServiceSteps{
   }
 
   @Given("^the order service is deployed$")
-  public void the_order_service_is_deployed() throws Throwable {
+  public void order_service_is_deployed() throws Throwable {
     assertEquals(200, given().when().get(ORDER_SERVICE_URL+"/version").getStatusCode());
   }
 
-//  @Given("^an order exists with the following details:$")
-//  public void an_order_exists_with_the_following_details(List<Map<String,String>> table) throws Throwable {
-//  }
-  @Then("a new order is created with the following details:$")
-  public void a_new_order_is_created_with_the_following_details(List<Map<String,String>> table) throws Throwable {
-//    an_order_exists_with_the_following_details(table);
+  @Then("new orders are created with the following details:$")
+  public void create_new_orders(List<Map<String,String>> table) throws Throwable {
     orders.clear();
     for(Map<String,String> row:table){
       String id=row.get("ID");
       String country=row.get("Country");
       double amount=Double.valueOf(row.get("Amount"));
-//      String[] items=row.get("Items").split(",");
       orders.add(new Order(id, Country.valueOf(country), amount));
     }
   }
 
-  @When("^the risk check is performed$")
-  public void the_risk_check_is_performed() throws Throwable {
+//  @When("^the risk check is performed$")
+//  public void the_risk_check_is_performed() throws Throwable {
+//    for(Order order:orders)
+//      riskCheckOrder(order);
+//  }
+  
+  @When("^the orders are submitted$")
+  public void submit_orders() throws Throwable {
     for(Order order:orders)
-      riskCheckOrder(order);
+      submit_order(order);
   }
   
-  @When("^the order is submitted$")
-  public void the_order_is_submitted() throws Throwable {
-    for(Order order:orders){
-      String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+"}";
-      Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/order/new");
-      String responseString=response.asString();
-      if (response.getStatusCode()!=200)
-        throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
-      assertEquals(200, response.getStatusCode());
-      Order responseOrder=Json.toObject(responseString, Order.class);
-      assertTrue("The response order should have a positive processId, "+responseOrder.getProcessId()+" was returned. Whole response = "+responseString, responseOrder.getProcessId()>0);
-    }
-  }
-  
-  public void riskCheckOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
-    String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
-    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
+  public void submit_order(Order order) {
+    String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+"}";
+    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/order/new");
     String responseString=response.asString();
     if (response.getStatusCode()!=200)
       throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
     assertEquals(200, response.getStatusCode());
-    Order responseOrder=Json.toObject(responseString, Order.class);
-    order.setRiskStatus(responseOrder.getRiskStatus());
-    order.setRiskReason(responseOrder.getRiskReason());
+//    Order responseOrder=Json.toObject(responseString, Order.class);
+//      assertTrue("The response order should have a positive processId, "+responseOrder.getProcessId()+" was returned. Whole response = "+responseString, responseOrder.getProcessId()>0);
   }
+  
+//  public void riskCheckOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
+//    String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
+//    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
+//    String responseString=response.asString();
+//    if (response.getStatusCode()!=200)
+//      throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
+//    assertEquals(200, response.getStatusCode());
+//    Order responseOrder=Json.toObject(responseString, Order.class);
+//    order.setRiskStatus(responseOrder.getRiskStatus());
+//    order.setRiskReason(responseOrder.getRiskReason());
+//  }
   
   @Then("^the responses should be:$")
   public void the_result_should_be(List<Map<String,String>> table) throws Throwable {
     int ordersCheckedCount=0;
     assertEquals("You must provide expected responses for all orders", table.size(), orders.size());
     for(Map<String,String> row:table){
-      Response response=given().when().post(ORDER_SERVICE_URL+"/rest/order/"+row.get("ID"));
-      Order order=(Order)Json.toObject(response.asString(), Order.class);
-      assertEquals(row.get("Risk Rating"), order.getRiskStatus());
+      String url=ORDER_SERVICE_URL+"/rest/order/"+row.get("ID");
+      Response response=given().when().post(url);
+      String received=response.asString();
+      if (received.contains("<")) Assert.fail("Error: Response to url ["+url+"] was: "+ received);
+      Order order=(Order)Json.toObject(received, Order.class);
+      assertEquals("for ID "+row.get("ID"), row.get("Risk Rating"), order.getRiskStatus());
       // allow null or empty
       assertTrue("Found \""+order.getRiskReason()+"\"","".equals(row.get("Reason"))?StringUtils.isEmpty(order.getRiskReason()):order.getRiskReason().equalsIgnoreCase(row.get("Reason")));
       ordersCheckedCount+=1;

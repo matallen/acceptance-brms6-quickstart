@@ -45,7 +45,7 @@ import org.kie.api.runtime.process.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/")
+@Path("/OLD")
 public class RestController {
   private static final Logger log = LoggerFactory.getLogger(RestController.class);
   private static Map<String,ProcessInstance> orders=new HashMap<String, ProcessInstance>();

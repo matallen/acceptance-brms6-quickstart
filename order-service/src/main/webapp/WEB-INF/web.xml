@@ -9,7 +9,7 @@
 	</context-param>
     <context-param>
         <param-name>resteasy.resources</param-name>
-        <param-value>org.jboss.webapp.RestController</param-value>
+        <param-value>org.jboss.webapp.RestControllerNoProcesses</param-value>
     </context-param>
 
 	<context-param>
