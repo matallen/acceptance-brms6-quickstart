@@ -60,8 +60,8 @@ public class OrderServiceRiskTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("REFER", order.getRiskStatus());
-    assertEquals("MEDIUM ORDER VALUE", order.getRiskReason());
+    assertEquals("ACCEPT", order.getRiskStatus());
+    assertEquals("", order.getRiskReason());
     assertEquals(1, rules);
   }
   
@@ -76,7 +76,7 @@ public class OrderServiceRiskTest extends RulesTestBase{
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("REJECT", order.getRiskStatus());
+    assertEquals("REFER", order.getRiskStatus());
     assertEquals("ORDER AMOUNT TOO HIGH", order.getRiskReason());
     assertEquals(1, rules);
   }
@@ -87,12 +87,12 @@ public class OrderServiceRiskTest extends RulesTestBase{
     
     Order order=new OrderBuilder().id("1")
       .country(Country.AFG)
-      .amount(10.00)
+      .amount(250.00)
       .build();
     int rules=fireAllRules(order);
     
-    assertEquals("REJECT", order.getRiskStatus());
-    assertEquals("COUNTRY NOT KNOWN", order.getRiskReason());
+    assertEquals("REFER", order.getRiskStatus());
+    assertEquals("COUNTRY UNKNOWN", order.getRiskReason());
     assertEquals(1, rules);
   }
 }
