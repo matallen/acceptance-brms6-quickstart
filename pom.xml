@@ -20,11 +20,7 @@
 	
 	<profiles>
 		<profile>
-		    <!--
-		    6.0.2.GA == 6.0.3-redhat-4
-		    6.0.3.GA == 6.0.3-redhat-6
-		    -->
-			<id>brms-6.0.3.GA</id>
+			<id>brms</id>
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
 				<brms.version>6.0.3-redhat-6</brms.version>
@@ -32,15 +28,15 @@
 			<dependencyManagement>
 				<dependencies>
 					<!-- mallen: TRY THIS
-					+ org.drools/drools-bom
-					-->
 					<dependency>
 						<groupId>org.kie</groupId>
 						<artifactId>kie-bom</artifactId>
-						<version>${brms.version}</version>
+						<version>6.0.3-redhat-4</version>
 						<type>pom</type>
 						<scope>import</scope>
 					</dependency>
+					+ org.drools/drools-bom
+					-->
 					<dependency>
 						<groupId>org.antlr</groupId>
 						<artifactId>antlr-runtime</artifactId>
@@ -204,7 +200,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.kie</groupId>
 										<artifactId>kie-maven-plugin</artifactId>
-										<versionRange>[6.0.3-redhat-6,)</versionRange>
+										<versionRange>[6.0.3-redhat-4,)</versionRange>
 										<goals>
 											<goal>build</goal>
 										</goals>

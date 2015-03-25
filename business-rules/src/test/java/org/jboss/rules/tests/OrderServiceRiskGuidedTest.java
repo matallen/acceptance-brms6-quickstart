@@ -18,8 +18,7 @@
 package org.jboss.rules.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.apache.commons.lang.StringUtils;
+
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
 import org.jboss.order.domain.OrderBuilder;
@@ -27,19 +26,26 @@ import org.jboss.rules.RulesTestBase;
 import org.junit.Test;
 
 public class OrderServiceRiskGuidedTest extends RulesTestBase{
+  
   @Test
-  public void test_EuroLowValue_shouldAccept() {
-//    compileAndLoadKieSession("order.riskguided");
+  public void test_EuroCountriesNeedRiskChecks() {
     loadKieSession("order.riskguided");
-    
     Order order=new OrderBuilder().id("1")
       .country(Country.GBR)
-      .amount(50.00)
       .build();
     int rules=fireAllRules(order);
-    
-    assertEquals("ACCEPT", order.getRiskStatus());
-    assertTrue(StringUtils.isEmpty(order.getRiskReason()));
+    assertEquals(true, order.isRiskCheck());
     assertEquals(1, rules);
+  }
+  
+  @Test
+  public void test_NonEuroCountriesDontNeedRiskChecks() {
+    loadKieSession("order.riskguided");
+    Order order=new OrderBuilder().id("1")
+      .country(Country.AFG)
+      .build();
+    int rules=fireAllRules(order);
+    assertEquals(false, order.isRiskCheck());
+    assertEquals(0, rules);
   }
 }

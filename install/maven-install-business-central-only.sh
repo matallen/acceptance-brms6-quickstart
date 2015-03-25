@@ -6,7 +6,7 @@ URL="file:///home/$USER/.m2/repository"
 DISTRO=$1
 if [ "x$DISTRO" == "x" ]; then
   echo "Please pass distro zip as a parameter, ie:"
-  echo "  maven-install-business-central-only.sh jboss-bpms-6.0.3.GA-redhat-1-deployable-generic.zip"
+  echo "  maven-install-business-central-only.sh jboss-bpms-6.0.2.GA-redhat-5-deployable-generic.zip"
   exit
 fi
 

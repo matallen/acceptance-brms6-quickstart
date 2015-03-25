@@ -23,18 +23,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.plexus.util.StringUtils;
 import org.jboss.acceptance.utils.Json;
 import org.jboss.acceptance.utils.Utils;
 import org.jboss.order.domain.Country;
 import org.jboss.order.domain.Order;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +45,6 @@ import cucumber.api.java.en.When;
 
 public class OrderServiceSteps{
   private static final Logger log=LoggerFactory.getLogger(OrderServiceSteps.class);
-//  private static final String ORDER_SERVICE_URL=System.getProperty("target.server")+"/order-service";
   private static final String ORDER_SERVICE_URL="http://localhost:16080/order-service";
   private List<Order> orders=new ArrayList<Order>();
   
@@ -57,69 +54,63 @@ public class OrderServiceSteps{
   }
 
   @Given("^the order service is deployed$")
-  public void order_service_is_deployed() throws Throwable {
+  public void the_order_service_is_deployed() throws Throwable {
     assertEquals(200, given().when().get(ORDER_SERVICE_URL+"/version").getStatusCode());
   }
 
   @Then("new orders are created with the following details:$")
-  public void create_new_orders(List<Map<String,String>> table) throws Throwable {
+  public void a_new_order_is_created_with_the_following_details(List<Map<String,String>> table) throws Throwable {
     orders.clear();
-    for(Map<String,String> row:table){
-      String id=row.get("ID");
-      String country=row.get("Country");
-      double amount=Double.valueOf(row.get("Amount"));
-      orders.add(new Order(id, Country.valueOf(country), amount));
+    for(Map<String,String> row:table)
+      orders.add(new Order(row.get("ID"), Country.valueOf(row.get("Country")), Double.valueOf(row.get("Amount"))));
+  }
+  
+  @When("^the risk check is performed$")
+  public void the_risk_check_is_performed() throws Throwable {
+    for(Order order:orders)
+      riskCheckOrder(order);
+  }
+  
+  @When("^the orders are processed$")
+  public void the_order_is_submitted() throws Throwable {
+    for(Order order:orders){
+      String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+"}";
+      Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/order/new");
+      String responseString=response.asString();
+      if (response.getStatusCode()!=200)
+        throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
+      assertEquals(200, response.getStatusCode());
+      Order responseOrder=Json.toObject(responseString, Order.class);
+//      assertTrue("The response order should have a positive processId, "+responseOrder.getProcessId()+" was returned. Whole response = "+responseString, responseOrder.getProcessId()>0);
     }
   }
-
-//  @When("^the risk check is performed$")
-//  public void the_risk_check_is_performed() throws Throwable {
-//    for(Order order:orders)
-//      riskCheckOrder(order);
-//  }
   
-  @When("^the orders are submitted$")
-  public void submit_orders() throws Throwable {
-    for(Order order:orders)
-      submit_order(order);
-  }
-  
-  public void submit_order(Order order) {
+  public void riskCheckOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
     String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+"}";
-    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/order/new");
+    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
     String responseString=response.asString();
     if (response.getStatusCode()!=200)
       throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
     assertEquals(200, response.getStatusCode());
-//    Order responseOrder=Json.toObject(responseString, Order.class);
-//      assertTrue("The response order should have a positive processId, "+responseOrder.getProcessId()+" was returned. Whole response = "+responseString, responseOrder.getProcessId()>0);
+    Order responseOrder=Json.toObject(responseString, Order.class);
+    order.setRiskStatus(responseOrder.getRiskStatus());
+    order.setRiskReason(responseOrder.getRiskReason());
   }
   
-//  public void riskCheckOrder(Order order) throws JsonParseException, JsonMappingException, IOException{
-//    String payload="{\"id\":\""+order.getId()+"\",\"country\":\""+order.getCountry().name()+"\",\"amount\":"+order.getAmount()+",\"items\":[]}";
-//    Response response=given().when().body(payload).post(ORDER_SERVICE_URL+"/rest/riskcheck");
-//    String responseString=response.asString();
-//    if (response.getStatusCode()!=200)
-//      throw new RuntimeException("Response was ["+response.getStatusLine()+"], with content of ["+responseString+"]");
-//    assertEquals(200, response.getStatusCode());
-//    Order responseOrder=Json.toObject(responseString, Order.class);
-//    order.setRiskStatus(responseOrder.getRiskStatus());
-//    order.setRiskReason(responseOrder.getRiskReason());
-//  }
-  
-  @Then("^the responses should be:$")
-  public void the_result_should_be(List<Map<String,String>> table) throws Throwable {
+  @Then("^the risk responses should be:$")
+  public void the_risk_responses_should_be(List<Map<String,String>> table) throws Throwable {
     int ordersCheckedCount=0;
     assertEquals("You must provide expected responses for all orders", table.size(), orders.size());
     for(Map<String,String> row:table){
-      String url=ORDER_SERVICE_URL+"/rest/order/"+row.get("ID");
-      Response response=given().when().post(url);
-      String received=response.asString();
-      if (received.contains("<")) Assert.fail("Error: Response to url ["+url+"] was: "+ received);
-      Order order=(Order)Json.toObject(received, Order.class);
-      assertEquals("for ID "+row.get("ID"), row.get("Risk Rating"), order.getRiskStatus());
+      Response response=given().when().post(ORDER_SERVICE_URL+"/rest/order/"+row.get("ID"));
+      String responseString=response.asString();
+      Order order=(Order)Json.toObject(responseString, Order.class);
+      if (!row.get("Risk Rating").equals(order.getRiskStatus())){
+        System.err.println("FAILED on row: "+row);
+        assertEquals(row.get("Risk Rating"), order.getRiskStatus());
+      }
       // allow null or empty
-      assertTrue("Found \""+order.getRiskReason()+"\"","".equals(row.get("Reason"))?StringUtils.isEmpty(order.getRiskReason()):order.getRiskReason().equalsIgnoreCase(row.get("Reason")));
+      assertTrue("Found \""+order.getRiskReason()+"\" risk reason, expecting \""+row.get("Reason")+"\"","".equals(row.get("Reason"))?StringUtils.isEmpty(order.getRiskReason()):order.getRiskReason().equalsIgnoreCase(row.get("Reason").trim()));
       ordersCheckedCount+=1;
     }
     assertEquals(table.size(), ordersCheckedCount);

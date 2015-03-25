@@ -66,10 +66,12 @@ public class RulesTestBase {
         String drl=null;
         if (file.getName().toLowerCase().matches(".+drl$")){
           drl=IOUtils.toString(new FileInputStream(file));
+          System.out.println(drl);
 //          kfs.write("src/main/resources/test.drl",kieServices.getResources().newInputStreamResource(new FileInputStream(file)).setResourceType(ResourceType.DRL));
         }else if (file.getName().toLowerCase().matches(".+xls$")){
           drl=new SpreadsheetCompiler().compile(new FileInputStream(file), InputType.XLS);
           log.debug(drl);
+          System.out.println(drl);
 //          kfs.write("src/main/resources/test.drl",kieServices.getResources().newInputStreamResource(new ByteArrayInputStream(drl.getBytes())).setResourceType(ResourceType.DRL));
         }else if (file.getName().toLowerCase().matches(".+dslr$")){
           File[] dslFiles=file.getParentFile().listFiles(new FilenameFilter() {

@@ -3,7 +3,7 @@
 	# to run acceptance from CI (ie. start containers, deploy apps, run tests and stop containers) 
 	mvn clean install -Pbrms,acceptance -o
 	
-	# to start containers for Development purposes (ie. run RunCucumberTests.java from IDE): 
+	# to start containers for Development purposes: 
 	mvn clean package cargo:run -Pbrms
 	
 	-->
@@ -19,7 +19,7 @@
 
 	<properties>
 		<cucumber.version>1.1.8</cucumber.version> <!-- 1.8 is the latest -->
-		<bpms-local.m2repo>${project.build.directory}/bpms-local-m2repo</bpms-local.m2repo>
+        <bpms-local.m2repo>${project.build.directory}/bpms-local-m2repo</bpms-local.m2repo>
 		<bpms-remote.m2repo>file://${user.home}/.m2/repository</bpms-remote.m2repo>
 		<client-local.m2repo>${project.build.directory}/client-local-m2repo</client-local.m2repo>
 	</properties>
@@ -104,9 +104,9 @@
 									<bpms.username>admin</bpms.username>
 									<bpms.password>admin</bpms.password>
 									<bpms.url>${target.server}/business-central</bpms.url>
-								    <!--
+								<!-- 
 									<org.kie.demo>false</org.kie.demo>
-								    -->
+								 -->
 									<!-- push the temporary CI information into target folder ready to be cleaned up  -->
 									<org.uberfire.nio.git.dir>${project.build.directory}</org.uberfire.nio.git.dir>
 									<!-- local repo for BPMS -->
@@ -135,6 +135,16 @@
 										<groupId>org.slf4j</groupId>
 										<artifactId>slf4j-api</artifactId>
 									</dependency>
+								    <!--
+									<dependency>
+										<groupId>org.slf4j</groupId>
+										<artifactId>slf4j-log4j12</artifactId>
+									</dependency>
+									<dependency>
+										<groupId>log4j</groupId>
+										<artifactId>log4j</artifactId>
+									</dependency>
+									-->
 									<!-- for deployment on Tomcat7 -->
 									<dependency>
 										<groupId>org.kie</groupId>
@@ -170,10 +180,10 @@
 							<configuration>
 								<properties>
 									<!--
+										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Xnoagent
 										-Dcom.sun.management.jmxremote.port=6000
 										-Dcom.sun.management.jmxremote.authenticate=false
 										-Dcom.sun.management.jmxremote.ssl=false
-										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Xnoagent
 									-->
 									<cargo.jvmargs>
 										-Xmx1024m
@@ -209,6 +219,13 @@
 									</configfile>
 								</configfiles>
 								<deployables>
+								    <!--
+								    <deployable>
+								        <groupId>org.sonatype.nexus</groupId>
+								        <artifactId>nexus-webapp</artifactId>
+								        <type>war</type>
+								    </deployable>
+								    -->
 									<deployable>
 										<groupId>org.kie</groupId>
 										<artifactId>kie-drools-wb-distribution-wars</artifactId>
@@ -233,7 +250,7 @@
 					<plugin>
 						<groupId>org.kie.maven.plugins</groupId>
 						<artifactId>maven-kie-deployer-plugin</artifactId>
-						<version>1.0.3</version>
+						<version>1.0.4-SNAPSHOT</version>
 						<executions>
 							<execution>
 								<id>deploy-kie-modules</id>
@@ -259,7 +276,7 @@
 							</execution>
 						</executions>
 						<dependencies>
-							<!--  TODO: seem to be getting this error on Jeknins sometimes, so i added this to try to solve it
+							<!--  TODO: seem to be getting this error on Jenkins sometimes, so i added this to try to solve it
 							A required class was missing while executing org.jboss.kie.maven:maven-kie-deployer-plugin:1.0.0:deploy: org/apache/http/HttpException
 							-->
 					        <dependency>
@@ -344,10 +361,19 @@
 	</profiles>
 
 	<dependencies>
+<!--
+	    <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-webapp</artifactId>
+            <version>2.9.2-01</version>
+            <type>war</type>
+	    </dependency>
+-->
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-drools-wb-distribution-wars</artifactId>
 			<classifier>tomcat7.0</classifier>
+			<version>${brms.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -423,11 +449,12 @@
             <scope>test</scope>
         </dependency>
         
+		<!-- to force module build order only -->
 		<dependency>
-            <groupId>org.jboss.quickstarts.brms6</groupId>
-            <artifactId>rule-domain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+			<groupId>org.jboss.quickstarts.brms6</groupId>
+			<artifactId>business-rules</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		
 		<!-- for http interactions -->
 		<dependency>
@@ -441,5 +468,18 @@
             <version>4.2.5</version>
         </dependency>
         
+        <!--
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        -->
+                                    
 	</dependencies>
 </project>

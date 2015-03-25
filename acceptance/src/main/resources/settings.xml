@@ -16,7 +16,17 @@
       </repositories>
     </profile>
   </profiles>
-
+  
+  <!--
+  <servers>
+    <server>
+      <id>bpms-remote</id>
+      <username>admin</username>
+      <password>admin</password>
+    </server>
+  </servers>
+  -->
+  
   <activeProfiles>
     <activeProfile>repositories</activeProfile>
   </activeProfiles>

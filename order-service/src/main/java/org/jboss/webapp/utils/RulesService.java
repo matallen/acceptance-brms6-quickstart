@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.jboss.webapp.DroolsAgendaEventListener;
 import org.kie.api.KieServices;
+import org.kie.api.builder.KieScanner;
+import org.kie.api.builder.ReleaseId;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.rule.Rule;
 import org.kie.api.event.rule.AgendaEventListener;
@@ -35,14 +37,22 @@ import org.slf4j.LoggerFactory;
 public class RulesService {
   private static final Logger log = LoggerFactory.getLogger(RulesService.class);
   private static KieContainer kContainer=null;
+  private static KieScanner kScanner=null;
   private static boolean headerPrinted=false;
   private static Map<String,Object> emptyMap=new HashMap<String, Object>();
+  
+  public RulesService(){
+  }
   
   /**
    * Override this to change the kieSessionName. Default is defaultKieBase.session
    */
   public String getKieSessionName(){
     return "defaultKieBase.session";
+  }
+  public ReleaseId getReleaseId(){
+    throw new RuntimeException("Please override the RuleService.getReleaseId method to specify the maven group, artifact and version");
+//    return new ReleaseIdImpl("com.redhat", "changeme", "1.0");
   }
   
   public ProcessInstance startProcess(String processId){
@@ -57,7 +67,8 @@ public class RulesService {
     metrics.end("InitkieServices");
     
     if (kContainer==null){
-      kContainer=kieServices.newKieClasspathContainer(); // uses kie modules from the maven pom dependencies
+      initKContainer(kieServices);
+//      kContainer=kieServices.newKieClasspathContainer(); // uses kie modules from the maven pom dependencies
       metrics.end("InitKieContainer");
     }
     
@@ -81,6 +92,17 @@ public class RulesService {
     return execute(Arrays.asList(facts));
   }
   
+  ReleaseId newKieContainer(KieServices kieServices, String groupId, String artifactId, String version){
+    return kieServices.newReleaseId(groupId, artifactId, version);
+  }
+  
+  public void initKContainer(KieServices kieServices){
+    ReleaseId releaseId=getReleaseId();
+    kContainer=kieServices.newKieContainer(kieServices.newReleaseId(releaseId.getGroupId(), releaseId.getArtifactId(), releaseId.getVersion()));
+    kScanner=kieServices.newKieScanner(kContainer);
+    kScanner.scanNow();
+  }
+  
   public <T> int execute(Iterable<T> facts){
     Metrics metrics=new Metrics();
     
@@ -89,15 +111,22 @@ public class RulesService {
     metrics.end("InitkieServices");
     
     if (kContainer==null){
-      kContainer=kieServices.newKieClasspathContainer(); // uses kie modules from the maven pom dependencies
+      initKContainer(kieServices);
       metrics.end("InitKieContainer");
     }
     
     AgendaEventListener listener=new DroolsAgendaEventListener();
     KieSession session=null;
     try{
-      session = kContainer.newKieSession(getKieSessionName());
+//      if (mode.equals(Mode.NamedSession)){
+        session = kContainer.newKieSession(getKieSessionName());
+//      }else{
+//        KieBase kBase=kContainer.newKieBase("defaultKieBase", kieServices.newKieBaseConfiguration());
+//        session = kBase.newKieSession();
+//      }
       metrics.end("initKieSession");
+      
+      if (session==null) throw new RuntimeException("KieSession is null!");
       
       if (0==session.getKieBase().getKiePackages().size()) throw new RuntimeException("No Rules in kBase!!!");
       
@@ -131,8 +160,10 @@ public class RulesService {
       return numberOfRulesFired; // perhaps return the list of rule names fired provided by the event listener would be more useful
       
     }finally{
-      session.removeEventListener((AgendaEventListener)listener);
-      if (null!=session) session.dispose();
+      if (null!=session){
+        session.removeEventListener((AgendaEventListener)listener);
+        session.dispose();
+      }
     }
   }
 }

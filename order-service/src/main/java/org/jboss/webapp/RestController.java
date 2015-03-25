@@ -32,42 +32,21 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.jboss.order.domain.Order;
+import org.jboss.webapp.utils.FluentRulesService;
 import org.jboss.webapp.utils.Json;
-import org.jboss.webapp.utils.RulesService;
-import org.jbpm.process.core.Process;
-import org.jbpm.process.core.context.variable.VariableScope;
-import org.jbpm.process.instance.ContextInstance;
-import org.jbpm.process.instance.context.variable.VariableScopeInstance;
-import org.kie.api.KieServices;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.process.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/OLD")
+@Path("/")
 public class RestController {
   private static final Logger log = LoggerFactory.getLogger(RestController.class);
-  private static Map<String,ProcessInstance> orders=new HashMap<String, ProcessInstance>();
+  private static Map<String,Order> orders=new HashMap<String, Order>();
   
   @POST
   @Path("/order/{orderId}")
   public Response get(@PathParam("orderId") String orderId, @Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-    
-//    KieServices kieServices=KieServices.Factory.get();
-//    KieContainer kContainer=kieServices.newKieContainer(kieServices.newReleaseId("org.jboss.quickstarts.brms6", "business-rules", "6.0.0-SNAPSHOT"));
-//    KieSession kSession=kContainer.newKieSession("order.process");
-//    org.jbpm.process.instance.ProcessInstance processInstance=(org.jbpm.process.instance.ProcessInstance)kSession.getProcessInstance(Long.parseLong(orderId));
-//    VariableScopeInstance ctx=(VariableScopeInstance)processInstance.getContextInstance(VariableScope.VARIABLE_SCOPE);
-//    Order order=(Order)ctx.getVariable("order");
-    
-    ProcessInstance process=orders.get(orderId);
-    org.jbpm.process.instance.ProcessInstance processInstance=(org.jbpm.process.instance.ProcessInstance)process;
-    VariableScopeInstance ctx=(VariableScopeInstance)processInstance.getContextInstance(VariableScope.VARIABLE_SCOPE);
-    Order order=(Order)ctx.getVariable("order");
-    
+    Order order=orders.get(orderId);
     String result=Json.toJson(order);
-    
     log.info("[/order/"+orderId+"] Returning payload ["+result+"]");
     return Response.status(200).entity(result).build();
   }
@@ -80,26 +59,27 @@ public class RestController {
       log.info("[/order/new] Called with payload "+payload);
       Order order=(Order)Json.toObject(payload, Order.class);
       
+      // set defaults outside of rules
+      order.setRiskStatus("REFER");
+      order.setRiskReason("");
+      
       String originalKieMavenSettingsCustom=System.getProperty("kie.maven.settings.custom");
       System.setProperty("kie.maven.settings.custom", System.getProperty("kie.maven.client.settings.custom"));
       
-      Map<String,Object> parameters=new HashMap<String, Object>();
-      parameters.put("order", order);
+      String version="6.0.0-SNAPSHOT"; // ensure "always" is set for the updatePolicy in settings.xml
       
-      ProcessInstance process=new RulesService(){public String getKieSessionName(){
-          return "order.process";
-      }}.startProcess("OrderProcess", parameters);
+      new FluentRulesService()
+        .withReleaseId("org.jboss.quickstarts.brms6", "business-rules", version)
+        .withKieBaseName("order.risk.kb")
+        .withAgendaListener(new DroolsAgendaEventListener())
+        .execute(order);
       
-      order.setProcessId(process.getId());
-      
-      orders.put(order.getId(), process);
+      orders.put(order.getId(), order);
       
       if (null==originalKieMavenSettingsCustom){
         System.clearProperty("kie.maven.settings.custom");
       }else
         System.setProperty("kie.maven.settings.custom", originalKieMavenSettingsCustom);
-      
-      // perhaps we have another async call to check on the order process status?
       
       String result=Json.toJson(order);
       log.info("[/order/new] Returning payload ["+result+"]");
@@ -109,38 +89,4 @@ public class RestController {
     }
   }
   
-  @POST
-  @Path("/riskcheck")
-  public Response riskCheck(@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-    String payload=IOUtils.toString(request.getInputStream());
-    log.info("[/riskcheck] Called with payload "+payload);
-    Order order=(Order)Json.toObject(payload, Order.class);
-    
-    try{
-      // best practice - initialise default values outside of rules if possible. Don't write rules that you know will operate on all facts - it will be slower to execute than pure java.
-      order.setRiskStatus("HIGH");
-      order.setRiskReason("");
-      
-      String originalKieMavenSettingsCustom=System.getProperty("kie.maven.settings.custom");
-      System.setProperty("kie.maven.settings.custom", System.getProperty("kie.maven.client.settings.custom"));
-      
-      new RulesService(){
-        public String getKieSessionName(){
-          return "order.risk";
-        }
-      }.execute(order);
-      
-      if (null==originalKieMavenSettingsCustom){
-        System.clearProperty("kie.maven.settings.custom");
-      }else
-        System.setProperty("kie.maven.settings.custom", originalKieMavenSettingsCustom);
-      
-      String result=Json.toJson(order);
-      log.info("[/riskcheck] Returning payload ["+result+"]");
-      return Response.status(200).entity(result).build();
-      
-    }catch(IOException e){
-      return Response.status(500).entity(e.getMessage()).build();
-    }
-  }
 }

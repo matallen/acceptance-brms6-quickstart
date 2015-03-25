@@ -23,21 +23,20 @@ public class Order {
   private String id;
   private Country country;
   private double amount;
-//  private String[] items;
   private long processId;
   
   // rule setters
+  private boolean riskCheck;
   private String riskStatus;
   private String riskReason;
   
   
   public Order(){} //for json
-  public Order(String id, Country country, double amount/*, String[] items*/) {
+  public Order(String id, Country country, double amount) {
     super();
     this.id=id;
     this.country=country;
     this.amount=amount;
-//    this.items=items;
   }
   
   public void setId(String id) {
@@ -49,9 +48,6 @@ public class Order {
   public void setAmount(double amount) {
     this.amount=amount;
   }
-//  public void setItems(String[] items) {
-//    this.items=items;
-//  }
   public String getId() {
     return id;
   }
@@ -78,6 +74,12 @@ public class Order {
   }
   public long getProcessId(){
     return processId;
+  }
+  public boolean isRiskCheck() {
+    return riskCheck;
+  }
+  public void setRiskCheck(boolean riskCheck) {
+    this.riskCheck=riskCheck;
   }
   public String toString(){
     return ToStringBuilder.reflectionToString(this);

@@ -5,11 +5,10 @@ import org.jboss.order.domain.Country;
 
 expander language.dsl
 
-rule "Accept European countries with order value under 100"
+rule "Orders from Europe need to be risk checked"
 when
     There is an order
-    with amount under 100
-    which originates in GBR
+    that originates from GBR,FRA,DEU
 then
-    Set risk status to ACCEPT
+    ensure order is risk checked
 end

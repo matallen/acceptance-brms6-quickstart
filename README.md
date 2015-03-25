@@ -21,7 +21,7 @@ The Solution
 =
 
 ### Pre-conditions
-* Install the maven-kie-deployer-plugin that pushes a pre-built kie module into a running BPM Suite
+* Clone and Install the maven-kie-deployer-plugin that pushes a pre-built kie module into a running BPM Suite
 
 ```
 git clone https://github.com/matallen/maven-kie-deployer-plugin
@@ -29,10 +29,10 @@ cd maven-kie-deployer-plugin
 mvn clean install -DskipTests
 ```
 
-* Install the "business-central" BPM Suite webapp into your local m2 repo because it's not available in a public repo
+* Install the "business-central" BPM Suite webapp into your local m2 repository because it's not available in a public repo
 
 ```
-./install/maven-install-business-central-only.sh <your downloaded distro from the Red Hat Portal>
+./install/maven-install-business-central-only.sh jboss-bpms-6.0.3.GA-redhat-1-deployable-generic.zip
 ```
 
 
@@ -51,7 +51,7 @@ mvn clean install -DskipTests
 
 **Acceptance Test (ie, Jenkins)** - run `acceptance/mvn clean install -Pbrms,acceptance`. The `brms` profile starts and stops the container (Tomcat/Eap) and deploys web apps (BPM Suite + your specified services). The `acceptance` profiles enables the cucumber BDD testing framework to run after the container has started.
 
-**Developing BDD Tests** - run ` acceptance/mvn clean package cargo:run -Pbrms`. This will start the container and deploy BPM Suite + your specified services, leaving them running. You can now run the `RunCucumberTests` class as a JUnit test from Eclipse whilst developing your BDD features/statements.
+**Developing BDD Tests** - run `acceptance/mvn clean package cargo:run -Pbrms`. This will start the container and deploy BPM Suite + your specified services, leaving them running. You can now run the `RunCucumberTests` class as a JUnit test from Eclipse whilst developing your BDD features/statements.
 
 **Notes**
 `head pom.xml` - gives you the two commands above to copy/paste quickly

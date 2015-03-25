@@ -38,26 +38,30 @@
     
 	<dependencies>
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-api</artifactId>
+			<version>${brms.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.kie</groupId>
             <artifactId>kie-ci</artifactId>
+            <version>${brms.version}</version>
         </dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
 
 		<!-- brms dependencies -->
 		<dependency>
 			<groupId>org.drools</groupId>
 			<artifactId>drools-core</artifactId>
+			<version>${brms.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.drools</groupId>
 			<artifactId>drools-compiler</artifactId>
+			<version>${brms.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.drools</groupId>
@@ -72,14 +76,13 @@
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-internal</artifactId>
+			<version>${brms.version}</version>
 		</dependency>
-		<!-- 
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-		 -->
 		
 		<!-- for drools compilation -->
 		<dependency>
@@ -115,8 +118,8 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
-			<!--
 			<version>2.2.1.GA</version>
+			<!--
 			provided for EAP, not for Tomcat 
 			<scope>provided</scope>
 			 -->
@@ -126,23 +129,19 @@
 		<dependency>
             <groupId>org.jboss.quickstarts.brms6</groupId>
             <artifactId>business-rules</artifactId>
-            <version>6.0.0-SNAPSHOT</version> <!-- specify any later versions -->
+            <version>${project.version}</version>
         </dependency>
         
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<!-- 
 			<version>4.2.5</version>
-			 -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<!-- 
 			<version>1.9.4</version>
-			 -->
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

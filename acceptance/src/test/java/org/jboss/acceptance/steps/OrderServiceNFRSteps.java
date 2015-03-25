@@ -48,16 +48,15 @@ public class OrderServiceNFRSteps{
   @Before public void beforeAll(){
     if(!initialised) initialised=Utils.beforeScenarios();
   }
-  
-  static int incrementalOrderNumber=1;
+
   public class OrderFuture implements Callable<String> {
     private Order order;
     public OrderFuture(Order order){
         this.order=order;
     }
     @Override public String call() throws Exception {
-      new OrderServiceSteps().submit_order(order);
-      return order.getRiskStatus();
+        new OrderServiceSteps().riskCheckOrder(order);
+        return order.getRiskStatus();
     }
   }
   
