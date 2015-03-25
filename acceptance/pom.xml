@@ -24,13 +24,6 @@
 		<client-local.m2repo>${project.build.directory}/client-local-m2repo</client-local.m2repo>
 	</properties>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>ssm-repository</id> <!-- for the maven-kie-deployer-plugin -->
-			<url>http://nexus.gsso.redhat.com/nexus/content/repositories/releases/</url>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<build>
 		<plugins>
 			<!-- disable test by default, acceptance will use the failsafe plugin -->
